@@ -365,7 +365,7 @@ function FlavorForm({
       } else {
         setError(
           response.data.message ||
-            `Failed to ${mode === "create" ? "create" : "update"} flavor`
+          `Failed to ${mode === "create" ? "create" : "update"} flavor`
         );
       }
     } catch (error: any) {

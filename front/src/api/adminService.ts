@@ -772,3 +772,80 @@ export const brands = {
     return api.delete(`/api/admin/brands/${brandId}/products/${productId}`);
   },
 };
+
+// Flavors Management
+export const flavors = {
+  getFlavors: (params = {}) => {
+    return api.get("/api/admin/flavors", { params });
+  },
+  getFlavorById: (flavorId: string) => {
+    return api.get(`/api/admin/flavors/${flavorId}`);
+  },
+  createFlavor: (data: {
+    name: string;
+    description?: string;
+    image?: File | null;
+  }) => {
+    const formData = new FormData();
+    formData.append("name", data.name);
+    if (data.description) formData.append("description", data.description);
+    if (data.image) formData.append("image", data.image);
+
+    return api.post("/api/admin/flavors", formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+  },
+  updateFlavor: (
+    flavorId: string,
+    data: {
+      name?: string;
+      description?: string;
+      image?: File | null;
+    }
+  ) => {
+    const formData = new FormData();
+    if (data.name) formData.append("name", data.name);
+    if (data.description) formData.append("description", data.description);
+    if (data.image) formData.append("image", data.image);
+
+    return api.patch(`/api/admin/flavors/${flavorId}`, formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+  },
+  deleteFlavor: (flavorId: string, force: boolean = false) => {
+    return api.delete(
+      `/api/admin/flavors/${flavorId}${force ? "?force=true" : ""}`
+    );
+  },
+};
+
+// Weights Management
+export const weights = {
+  getWeights: (params = {}) => {
+    return api.get("/api/admin/weights", { params });
+  },
+  getWeightById: (weightId: string) => {
+    return api.get(`/api/admin/weights/${weightId}`);
+  },
+  createWeight: (data: { value: number; unit: string }) => {
+    return api.post("/api/admin/weights", data);
+  },
+  updateWeight: (
+    weightId: string,
+    data: {
+      value?: number;
+      unit?: string;
+    }
+  ) => {
+    return api.patch(`/api/admin/weights/${weightId}`, data);
+  },
+  deleteWeight: (weightId: string, force: boolean = false) => {
+    return api.delete(
+      `/api/admin/weights/${weightId}${force ? "?force=true" : ""}`
+    );
+  },
+};

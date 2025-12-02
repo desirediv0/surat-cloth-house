@@ -338,7 +338,7 @@ function ColorForm({
     gray: "#808080",
     grey: "#808080",
     brown: "#A52A2A",
-    
+
     // Blues
     navy: "#000080",
     "navy blue": "#000080",
@@ -356,7 +356,7 @@ function ColorForm({
     "bright blue": "#0096FF",
     "ocean blue": "#006994",
     "azure": "#007FFF",
-    
+
     // Greens
     "lime green": "#32CD32",
     "forest green": "#228B22",
@@ -374,7 +374,7 @@ function ColorForm({
     "turquoise": "#40E0D0",
     "aqua": "#00FFFF",
     "cyan": "#00FFFF",
-    
+
     // Reds & Pinks
     "crimson": "#DC143C",
     "scarlet": "#FF2400",
@@ -390,7 +390,7 @@ function ColorForm({
     "cherry": "#DE3163",
     "raspberry": "#E30B5D",
     "wine": "#722F37",
-    
+
     // Yellows & Oranges
     "gold": "#FFD700",
     "amber": "#FFBF00",
@@ -403,7 +403,7 @@ function ColorForm({
     "peach": "#FFE5B4",
     "cantaloupe": "#FFA07A",
     "papaya": "#FFEFD5",
-    
+
     // Purples & Violets
     "lavender": "#E6E6FA",
     "lilac": "#C8A2C8",
@@ -414,7 +414,7 @@ function ColorForm({
     "orchid": "#DA70D6",
     "mauve": "#E0B0FF",
     "periwinkle": "#CCCCFF",
-    
+
     // Browns & Tans
     "tan": "#D2B48C",
     "beige": "#F5F5DC",
@@ -426,7 +426,7 @@ function ColorForm({
     "caramel": "#AF6E4D",
     "hazel": "#8E7618",
     "walnut": "#773F1A",
-    
+
     // Grays & Neutrals
     "silver": "#C0C0C0",
     "charcoal": "#36454F",
@@ -440,44 +440,31 @@ function ColorForm({
     "dark gray": "#A9A9A9",
     "light grey": "#D3D3D3",
     "dark grey": "#A9A9A9",
-    
+
     // Fashion Colors
     "nude": "#E3BC9A",
     "blush": "#DE5D83",
-    "mauve": "#E0B0FF",
     "dusty rose": "#B76E79",
     "sage": "#87AE73",
     "terracotta": "#E2725B",
     "rust": "#B7410E",
-    "burgundy": "#800020",
-    "wine": "#722F37",
     "mint": "#98FB98",
-    "peach": "#FFE5B4",
-    "coral": "#FF7F50",
-    "salmon": "#FA8072",
-    
+
     // Indian Fashion Colors
     "saffron": "#F4C430",
     "turmeric": "#F0C420",
     "henna": "#6B4423",
-    "indigo": "#4B0082",
     "marigold": "#FFB347",
     "jasmine": "#F8DE7E",
     "lotus": "#E6E6FA",
     "rosewood": "#65000B",
     "mango": "#FFC324",
     "pomegranate": "#660000",
-    
+
     // Additional Common Colors
-    "emerald": "#50C878",
-    "jade": "#00A86B",
     "sapphire": "#0F52BA",
     "ruby": "#E0115F",
     "topaz": "#FFC87C",
-    "amber": "#FFBF00",
-    "coral": "#FF7F50",
-    "aqua": "#00FFFF",
-    "azure": "#007FFF",
     "cerulean": "#007BA7",
     "cobalt": "#0047AB",
     "ultramarine": "#120A8F",
@@ -487,30 +474,30 @@ function ColorForm({
   const handleNameChange = (e: ChangeEvent<HTMLInputElement>) => {
     const inputValue = e.target.value;
     const name = inputValue.trim().toLowerCase();
-    
+
     setFormData((prev) => {
       // Check if user has manually edited hex code (by checking if it matches a known color)
       const wasAutoFilled = Object.values(colorNameToHex).includes(prev.hexCode);
       const shouldAutoFill = !prev.hexCode || prev.hexCode === "" || wasAutoFilled;
-      
+
       let hexCode = prev.hexCode;
-      
+
       // Try exact match first
       if (shouldAutoFill && colorNameToHex[name]) {
         hexCode = colorNameToHex[name];
-      } 
+      }
       // Try partial match (for multi-word colors like "navy blue")
       else if (shouldAutoFill && name.length > 2) {
         // Find the best matching color name
         const matchingKey = Object.keys(colorNameToHex).find((key) => {
           const keyLower = key.toLowerCase();
-          return keyLower === name || 
-                 keyLower.startsWith(name) || 
-                 name.startsWith(keyLower) ||
-                 keyLower.includes(name) ||
-                 name.includes(keyLower);
+          return keyLower === name ||
+            keyLower.startsWith(name) ||
+            name.startsWith(keyLower) ||
+            keyLower.includes(name) ||
+            name.includes(keyLower);
         });
-        
+
         if (matchingKey) {
           hexCode = colorNameToHex[matchingKey];
         }
@@ -580,7 +567,7 @@ function ColorForm({
       } else {
         setError(
           response.data.message ||
-            `Failed to ${mode === "create" ? "create" : "update"} color`
+          `Failed to ${mode === "create" ? "create" : "update"} color`
         );
       }
     } catch (error: any) {

@@ -13,7 +13,7 @@ export default defineConfig({
   },
   // Add the preview configuration for production builds
   preview: {
-    port: 4173,
+    port: 4181,
     host: "0.0.0.0",
     allowedHosts: [
       "admin.suratclothhouse.com",

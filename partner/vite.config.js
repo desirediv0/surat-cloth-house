@@ -14,7 +14,7 @@ export default defineConfig({
   },
   // Add the preview configuration for production builds
   preview: {
-    port: 5000,
+    port: 5002,
     host: "0.0.0.0",
     allowedHosts: [
       "partner.suratclothhouse.com",
@@ -23,7 +23,7 @@ export default defineConfig({
   },
   // Add server configuration for development
   server: {
-    port: 5000,
+    port: 5002,
     host: "0.0.0.0",
     allowedHosts: [
       "partner.suratclothhouse.com",

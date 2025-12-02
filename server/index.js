@@ -4,7 +4,7 @@ import { prisma } from "./config/db.js";
 
 dotenv.config({ path: ".env" });
 
-const PORT = process.env.PORT || 4000;
+const PORT = process.env.PORT || 4009;
 
 // Handle unhandled promise rejections
 process.on("unhandledRejection", (reason, promise) => {

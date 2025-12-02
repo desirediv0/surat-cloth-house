@@ -17,8 +17,8 @@ export default defineConfig({
     port: 5000,
     host: "0.0.0.0",
     allowedHosts: [
-      "partner.genuinenutrition.com",
-      "www.partner.genuinenutrition.com",
+      "partner.suratclothhouse.com",
+      "www.partner.suratclothhouse.com",
     ],
   },
   // Add server configuration for development
@@ -26,8 +26,8 @@ export default defineConfig({
     port: 5000,
     host: "0.0.0.0",
     allowedHosts: [
-      "partner.genuinenutrition.com",
-      "www.partner.genuinenutrition.com",
+      "partner.suratclothhouse.com",
+      "www.partner.suratclothhouse.com",
     ],
   },
 })

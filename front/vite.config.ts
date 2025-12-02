@@ -16,16 +16,16 @@ export default defineConfig({
     port: 4173,
     host: "0.0.0.0",
     allowedHosts: [
-      "admin.genuinenutrition.com",
-      "www.admin.genuinenutrition.com",
+      "admin.suratclothhouse.com",
+      "www.admin.suratclothhouse.com",
     ],
   },
   // Add server configuration for development
   server: {
     host: "0.0.0.0",
     allowedHosts: [
-      "admin.genuinenutrition.com",
-      "www.admin.genuinenutrition.com",
+      "admin.suratclothhouse.com",
+      "www.admin.suratclothhouse.com",
     ],
   },
 });

@@ -162,11 +162,10 @@ export default function FAQsPage() {
                 <button
                   key={category}
                   onClick={() => handleCategoryChange(category)}
-                  className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
-                    activeCategory === category
+                  className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${activeCategory === category
                       ? "bg-primary text-white"
                       : "bg-gray-100 text-gray-700 hover:bg-gray-200"
-                  }`}
+                    }`}
                 >
                   {category === "all" ? "All Questions" : category}
                 </button>
@@ -227,7 +226,7 @@ export default function FAQsPage() {
                 Contact Us
               </a>
               <a
-                href="mailto:support@GenuineNutrition.com"
+                href="mailto:support@suratclothhouse.com"
                 className="inline-flex items-center justify-center px-6 py-3 border border-gray-300 rounded-md hover:bg-gray-100 transition-colors"
               >
                 Email Support

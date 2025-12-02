@@ -1,19 +1,28 @@
-"use client"
+"use client";
 
-import Link from "next/link"
-import { useAuth } from "@/lib/auth-context"
-import { useCart } from "@/lib/cart-context"
-import { useState, useEffect, useRef } from "react"
-import { ShoppingBag, User, Menu, X, Search, Heart, ChevronRight, Phone, Truck } from "lucide-react"
-import { Button } from "./ui/button"
-import { Input } from "./ui/input"
-import { useRouter, usePathname } from "next/navigation"
-import { fetchApi } from "@/lib/utils"
-import { ClientOnly } from "./client-only"
-import { cn } from "@/lib/utils"
-import { toast, Toaster } from "sonner"
-import Image from "next/image"
-
+import Link from "next/link";
+import { useAuth } from "@/lib/auth-context";
+import { useCart } from "@/lib/cart-context";
+import { useState, useEffect, useRef } from "react";
+import {
+  ShoppingBag,
+  User,
+  Menu,
+  X,
+  Search,
+  Heart,
+  ChevronRight,
+  Phone,
+  Truck,
+} from "lucide-react";
+import { Button } from "./ui/button";
+import { Input } from "./ui/input";
+import { useRouter, usePathname } from "next/navigation";
+import { fetchApi } from "@/lib/utils";
+import { ClientOnly } from "./client-only";
+import { cn } from "@/lib/utils";
+import { toast, Toaster } from "sonner";
+import Image from "next/image";
 
 const menuItems = [
   {
@@ -28,7 +37,10 @@ const menuItems = [
       categories: [
         { name: "Shop All", href: "/products?productType=suits" },
         { name: "Printed Suits", href: "/products?style=printed-suits" },
-        { name: "Embroidered Suits", href: "/products?style=embroidered-suits" },
+        {
+          name: "Embroidered Suits",
+          href: "/products?style=embroidered-suits",
+        },
         { name: "Cotton Suits", href: "/products?fabric=cotton-suits" },
         { name: "Silk Suits", href: "/products?fabric=silk-suits" },
       ],
@@ -97,7 +109,7 @@ const menuItems = [
     highlight: true,
     isSale: true,
   },
-]
+];
 
 const defaultCategories = [
   { id: "1", name: "Kurtis", slug: "kurtis" },
@@ -106,107 +118,110 @@ const defaultCategories = [
   { id: "4", name: "Western", slug: "western" },
   { id: "5", name: "Dresses", slug: "dresses" },
   { id: "6", name: "Jewellery", slug: "jewellery" },
-]
+];
 
 export function Navbar() {
-  const { user, isAuthenticated, logout } = useAuth()
-  const { getCartItemCount } = useCart()
-  const [isMenuOpen, setIsMenuOpen] = useState(false)
-  const [categories, setCategories] = useState(defaultCategories)
-  const [searchQuery, setSearchQuery] = useState("")
-  const [isSearchOpen, setIsSearchOpen] = useState(false)
-  const [activeMenu, setActiveMenu] = useState(null)
-  const [isScrolled, setIsScrolled] = useState(false)
-  const [expandedMobileMenu, setExpandedMobileMenu] = useState(null)
-  const searchInputRef = useRef(null)
-  const navbarRef = useRef(null)
-  const router = useRouter()
-  const pathname = usePathname()
+  const { user, isAuthenticated, logout } = useAuth();
+  const { getCartItemCount } = useCart();
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [categories, setCategories] = useState(defaultCategories);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const [activeMenu, setActiveMenu] = useState(null);
+  const [isScrolled, setIsScrolled] = useState(false);
+  const [expandedMobileMenu, setExpandedMobileMenu] = useState(null);
+  const searchInputRef = useRef(null);
+  const navbarRef = useRef(null);
+  const router = useRouter();
+  const pathname = usePathname();
 
   // Track scroll position for transparent/solid header
   useEffect(() => {
     const handleScroll = () => {
-      setIsScrolled(window.scrollY > 10)
-    }
-    window.addEventListener("scroll", handleScroll)
-    handleScroll()
-    return () => window.removeEventListener("scroll", handleScroll)
-  }, [])
+      setIsScrolled(window.scrollY > 10);
+    };
+    window.addEventListener("scroll", handleScroll);
+    handleScroll();
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   // Close mobile menu on route change
   useEffect(() => {
-    setIsMenuOpen(false)
-    setIsSearchOpen(false)
-    setActiveMenu(null)
-  }, [pathname])
+    setIsMenuOpen(false);
+    setIsSearchOpen(false);
+    setActiveMenu(null);
+  }, [pathname]);
 
   // Handle click outside
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (navbarRef.current && !navbarRef.current.contains(event.target)) {
-        setActiveMenu(null)
-        setIsSearchOpen(false)
+        setActiveMenu(null);
+        setIsSearchOpen(false);
       }
-    }
-    document.addEventListener("mousedown", handleClickOutside)
-    return () => document.removeEventListener("mousedown", handleClickOutside)
-  }, [])
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
   // Focus search input when opened
   useEffect(() => {
     if (isSearchOpen && searchInputRef.current) {
-      searchInputRef.current.focus()
+      searchInputRef.current.focus();
     }
-  }, [isSearchOpen])
+  }, [isSearchOpen]);
 
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const response = await fetchApi("/public/categories")
+        const response = await fetchApi("/public/categories");
         if (response?.data?.categories && response.data.categories.length > 0) {
-          setCategories(response.data.categories)
+          setCategories(response.data.categories);
         }
       } catch (error) {
-        console.log("[v0] Categories API failed, using defaults")
+        console.log("[v0] Categories API failed, using defaults");
         // Keep default categories
       }
-    }
-    fetchCategories()
-  }, [])
+    };
+    fetchCategories();
+  }, []);
 
   // Prevent body scroll when mobile menu is open
   useEffect(() => {
     if (isMenuOpen) {
-      document.body.style.overflow = "hidden"
+      document.body.style.overflow = "hidden";
     } else {
-      document.body.style.overflow = ""
+      document.body.style.overflow = "";
     }
     return () => {
-      document.body.style.overflow = ""
-    }
-  }, [isMenuOpen])
+      document.body.style.overflow = "";
+    };
+  }, [isMenuOpen]);
 
   const handleSearch = (e) => {
-    e.preventDefault()
+    e.preventDefault();
     if (searchQuery.trim()) {
-      router.push(`/products?search=${encodeURIComponent(searchQuery)}`)
-      setIsSearchOpen(false)
-      setSearchQuery("")
-      setIsMenuOpen(false)
+      router.push(`/products?search=${encodeURIComponent(searchQuery)}`);
+      setIsSearchOpen(false);
+      setSearchQuery("");
+      setIsMenuOpen(false);
     }
-  }
+  };
 
   const handleLogout = async () => {
-    await logout()
-    toast.success("Logged out successfully")
-    window.location.href = "/"
-  }
+    await logout();
+    toast.success("Logged out successfully");
+    window.location.href = "/";
+  };
 
   return (
     <>
       <header
         ref={navbarRef}
-        className={cn("fixed top-0 left-0 right-0 z-50 transition-all duration-300", isScrolled ? "shadow-md" : "")}
+        className={cn(
+          "fixed top-0 left-0 right-0 z-50 transition-all duration-300",
+          isScrolled ? "shadow-md" : ""
+        )}
       >
         <Toaster position="top-center" richColors />
 
@@ -218,10 +233,15 @@ export function Navbar() {
           </div>
         </div>
 
-        <div className={cn("transition-all duration-300 bg-white", !isScrolled && "bg-white/95 backdrop-blur-sm")}>
-          <div className="container mx-auto px-4">
+        <div
+          className={cn(
+            "transition-all duration-300 bg-white",
+            !isScrolled && "bg-white/95 backdrop-blur-sm"
+          )}
+        >
+          <div className="max-w-7xl mx-auto px-4">
             {/* Mobile Header */}
-            <div className="flex lg:hidden items-center justify-between h-14">
+            <div className="flex lg:hidden items-center justify-between h-24">
               <div className="flex items-center gap-1">
                 <button
                   onClick={() => setIsMenuOpen(true)}
@@ -240,15 +260,26 @@ export function Navbar() {
               </div>
 
               <Link href="/" className="flex items-center">
-                <Image src="/logo.png" alt="Surat Cloth House" width={50} height={40} />
+                <Image
+                  src="/logo.png"
+                  alt="Surat Cloth House"
+                  width={100}
+                  height={40}
+                />
               </Link>
 
               <div className="flex items-center gap-1">
                 <ClientOnly>
-                  <Link href="/wishlist" className="p-2 text-gray-700 hover:text-[#136C5B] transition-colors">
+                  <Link
+                    href="/wishlist"
+                    className="p-2 text-gray-700 hover:text-[#136C5B] transition-colors"
+                  >
                     <Heart className="h-5 w-5" />
                   </Link>
-                  <Link href="/cart" className="p-2 text-gray-700 hover:text-[#136C5B] transition-colors relative">
+                  <Link
+                    href="/cart"
+                    className="p-2 text-gray-700 hover:text-[#136C5B] transition-colors relative"
+                  >
                     <ShoppingBag className="h-5 w-5" />
                     {getCartItemCount() > 0 && (
                       <span className="absolute -top-0.5 -right-0.5 bg-[#136C5B] text-white text-xs w-5 h-5 rounded-full flex items-center justify-center font-medium">
@@ -261,10 +292,15 @@ export function Navbar() {
             </div>
 
             {/* Desktop Header */}
-            <div className="hidden lg:flex items-center justify-between h-16">
+            <div className="hidden lg:flex items-center justify-between h-24">
               {/* Logo */}
               <Link href="/" className="flex items-center shrink-0">
-                <Image src="/logo.png" alt="Surat Cloth House" width={60} height={40} />
+                <Image
+                  src="/logo.png"
+                  alt="Surat Cloth House"
+                  width={100}
+                  height={100}
+                />
               </Link>
 
               {/* Search Bar */}
@@ -295,7 +331,11 @@ export function Navbar() {
                   <div className="relative">
                     <button
                       className="flex flex-col items-center text-gray-700 hover:text-[#136C5B] transition-colors"
-                      onClick={() => setActiveMenu(activeMenu === "account" ? null : "account")}
+                      onClick={() =>
+                        setActiveMenu(
+                          activeMenu === "account" ? null : "account"
+                        )
+                      }
                     >
                       <User className="h-5 w-5" />
                       <span className="text-xs mt-0.5">Account</span>
@@ -307,14 +347,18 @@ export function Navbar() {
                         "absolute right-0 top-full mt-2 w-56 bg-white rounded-lg shadow-xl border border-gray-100 py-2 transition-all duration-200 origin-top-right z-50",
                         activeMenu === "account"
                           ? "opacity-100 scale-100 visible"
-                          : "opacity-0 scale-95 invisible pointer-events-none",
+                          : "opacity-0 scale-95 invisible pointer-events-none"
                       )}
                     >
                       {isAuthenticated ? (
                         <>
                           <div className="px-4 py-3 border-b border-gray-100">
-                            <p className="font-medium text-gray-900">{user?.name || "User"}</p>
-                            <p className="text-sm text-gray-500 truncate">{user?.email}</p>
+                            <p className="font-medium text-gray-900">
+                              {user?.name || "User"}
+                            </p>
+                            <p className="text-sm text-gray-500 truncate">
+                              {user?.email}
+                            </p>
                           </div>
                           <Link
                             href="/account"
@@ -340,8 +384,8 @@ export function Navbar() {
                           <div className="border-t border-gray-100 mt-2 pt-2">
                             <button
                               onClick={() => {
-                                handleLogout()
-                                setActiveMenu(null)
+                                handleLogout();
+                                setActiveMenu(null);
                               }}
                               className="block w-full text-left px-4 py-2.5 text-red-600 hover:bg-red-50 transition-colors"
                             >
@@ -351,10 +395,18 @@ export function Navbar() {
                         </>
                       ) : (
                         <div className="p-4 space-y-2">
-                          <Link href="/auth" onClick={() => setActiveMenu(null)}>
-                            <Button className="w-full bg-[#136C5B] hover:bg-[#0f5a4a]">Login</Button>
+                          <Link
+                            href="/auth"
+                            onClick={() => setActiveMenu(null)}
+                          >
+                            <Button className="w-full bg-[#136C5B] hover:bg-[#0f5a4a]">
+                              Login
+                            </Button>
                           </Link>
-                          <Link href="/auth?mode=register" onClick={() => setActiveMenu(null)}>
+                          <Link
+                            href="/auth?mode=register"
+                            onClick={() => setActiveMenu(null)}
+                          >
                             <Button
                               variant="outline"
                               className="w-full border-[#136C5B] text-[#136C5B] hover:bg-[#136C5B] hover:text-white bg-transparent"
@@ -392,7 +444,7 @@ export function Navbar() {
         <nav
           className={cn(
             "hidden lg:block border-t border-gray-100 transition-all duration-300 bg-white",
-            !isScrolled && "bg-white/95 backdrop-blur-sm",
+            !isScrolled && "bg-white/95 backdrop-blur-sm"
           )}
         >
           <div className="container mx-auto px-4">
@@ -411,7 +463,7 @@ export function Navbar() {
                         "block px-5 py-3 text-sm font-semibold tracking-wide transition-colors",
                         item.isSale
                           ? "bg-[#136C5B] text-white hover:bg-[#0f5a4a]"
-                          : "bg-[#136C5B] text-white hover:bg-[#0f5a4a]",
+                          : "bg-[#136C5B] text-white hover:bg-[#0f5a4a]"
                       )}
                     >
                       {item.name}
@@ -421,7 +473,7 @@ export function Navbar() {
                       href={item.href}
                       className={cn(
                         "block px-5 py-3 text-sm font-medium text-gray-800 hover:text-[#136C5B] tracking-wide transition-colors relative",
-                        activeMenu === item.name && "text-[#136C5B]",
+                        activeMenu === item.name && "text-[#136C5B]"
                       )}
                     >
                       {item.name}
@@ -429,7 +481,9 @@ export function Navbar() {
                         <span
                           className={cn(
                             "absolute bottom-0 left-5 right-5 h-0.5 bg-[#136C5B] transform origin-left transition-transform duration-200",
-                            activeMenu === item.name ? "scale-x-100" : "scale-x-0",
+                            activeMenu === item.name
+                              ? "scale-x-100"
+                              : "scale-x-0"
                           )}
                         />
                       )}
@@ -443,7 +497,7 @@ export function Navbar() {
                         "absolute left-1/2 -translate-x-1/2 top-full w-[500px] bg-white shadow-xl border border-gray-100 transition-all duration-200 origin-top z-50",
                         activeMenu === item.name
                           ? "opacity-100 scale-100 visible"
-                          : "opacity-0 scale-95 invisible pointer-events-none",
+                          : "opacity-0 scale-95 invisible pointer-events-none"
                       )}
                     >
                       <div className="grid grid-cols-2 gap-6 p-6">
@@ -498,8 +552,14 @@ export function Navbar() {
 
       {/* Mobile Search Overlay */}
       {isSearchOpen && (
-        <div className="fixed inset-0 z-[60] bg-black/50 lg:hidden" onClick={() => setIsSearchOpen(false)}>
-          <div className="bg-white p-4 animate-in slide-in-from-top duration-300" onClick={(e) => e.stopPropagation()}>
+        <div
+          className="fixed inset-0 z-[60] bg-black/50 lg:hidden"
+          onClick={() => setIsSearchOpen(false)}
+        >
+          <div
+            className="bg-white p-4 animate-in slide-in-from-top duration-300"
+            onClick={(e) => e.stopPropagation()}
+          >
             <form onSubmit={handleSearch} className="relative">
               <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" />
               <Input
@@ -521,22 +581,26 @@ export function Navbar() {
 
             {/* Quick Search Tags */}
             <div className="mt-4">
-              <p className="text-xs text-gray-500 mb-2 uppercase tracking-wide">Popular Searches</p>
+              <p className="text-xs text-gray-500 mb-2 uppercase tracking-wide">
+                Popular Searches
+              </p>
               <div className="flex flex-wrap gap-2">
-                {["Kurtis", "Sarees", "Suits", "Western", "Dresses"].map((term) => (
-                  <button
-                    key={term}
-                    type="button"
-                    onClick={() => {
-                      setSearchQuery(term)
-                      router.push(`/products?search=${term}`)
-                      setIsSearchOpen(false)
-                    }}
-                    className="px-3 py-1.5 text-sm bg-gray-100 text-gray-700 rounded-full hover:bg-[#136C5B] hover:text-white transition-colors"
-                  >
-                    {term}
-                  </button>
-                ))}
+                {["Kurtis", "Sarees", "Suits", "Western", "Dresses"].map(
+                  (term) => (
+                    <button
+                      key={term}
+                      type="button"
+                      onClick={() => {
+                        setSearchQuery(term);
+                        router.push(`/products?search=${term}`);
+                        setIsSearchOpen(false);
+                      }}
+                      className="px-3 py-1.5 text-sm bg-gray-100 text-gray-700 rounded-full hover:bg-[#136C5B] hover:text-white transition-colors"
+                    >
+                      {term}
+                    </button>
+                  )
+                )}
               </div>
             </div>
           </div>
@@ -546,23 +610,33 @@ export function Navbar() {
       <div
         className={cn(
           "fixed inset-0 z-[60] lg:hidden transition-opacity duration-300",
-          isMenuOpen ? "opacity-100 visible" : "opacity-0 invisible pointer-events-none",
+          isMenuOpen
+            ? "opacity-100 visible"
+            : "opacity-0 invisible pointer-events-none"
         )}
       >
         {/* Backdrop */}
-        <div className="absolute inset-0 bg-black/50" onClick={() => setIsMenuOpen(false)} />
+        <div
+          className="absolute inset-0 bg-black/50"
+          onClick={() => setIsMenuOpen(false)}
+        />
 
         {/* Menu Panel */}
         <div
           className={cn(
             "absolute left-0 top-0 bottom-0 w-[85%] max-w-sm bg-white transform transition-transform duration-300 flex flex-col",
-            isMenuOpen ? "translate-x-0" : "-translate-x-full",
+            isMenuOpen ? "translate-x-0" : "-translate-x-full"
           )}
         >
           {/* Menu Header */}
           <div className="bg-[#136C5B] px-4 py-3 flex items-center justify-between shrink-0">
-            <span className="text-sm font-medium text-white">FREE SHIPPING ABOVE ₹999</span>
-            <button onClick={() => setIsMenuOpen(false)} className="p-1 text-white hover:opacity-70">
+            <span className="text-sm font-medium text-white">
+              FREE SHIPPING ABOVE ₹999
+            </span>
+            <button
+              onClick={() => setIsMenuOpen(false)}
+              className="p-1 text-white hover:opacity-70"
+            >
               <X className="h-5 w-5" />
             </button>
           </div>
@@ -572,7 +646,9 @@ export function Navbar() {
             <div className="px-4 py-4 border-b border-gray-100 flex items-center justify-between shrink-0">
               {isAuthenticated ? (
                 <div>
-                  <p className="font-medium text-gray-900">Hi, {user?.name || "User"}</p>
+                  <p className="font-medium text-gray-900">
+                    Hi, {user?.name || "User"}
+                  </p>
                   <p className="text-sm text-gray-500">{user?.email}</p>
                 </div>
               ) : (
@@ -617,14 +693,18 @@ export function Navbar() {
                   {item.megaMenu ? (
                     <>
                       <button
-                        onClick={() => setExpandedMobileMenu(expandedMobileMenu === item.name ? null : item.name)}
+                        onClick={() =>
+                          setExpandedMobileMenu(
+                            expandedMobileMenu === item.name ? null : item.name
+                          )
+                        }
                         className="flex items-center justify-between w-full px-4 py-3.5 text-gray-800 hover:bg-gray-50 transition-colors"
                       >
                         <span className="font-medium">{item.name}</span>
                         <ChevronRight
                           className={cn(
                             "h-5 w-5 text-gray-400 transition-transform duration-200",
-                            expandedMobileMenu === item.name && "rotate-90",
+                            expandedMobileMenu === item.name && "rotate-90"
                           )}
                         />
                       </button>
@@ -633,7 +713,9 @@ export function Navbar() {
                       <div
                         className={cn(
                           "bg-gray-50 overflow-hidden transition-all duration-300",
-                          expandedMobileMenu === item.name ? "max-h-[500px] opacity-100" : "max-h-0 opacity-0",
+                          expandedMobileMenu === item.name
+                            ? "max-h-[500px] opacity-100"
+                            : "max-h-0 opacity-0"
                         )}
                       >
                         <div className="py-2">
@@ -708,8 +790,8 @@ export function Navbar() {
                 <div className="px-4 py-4 border-t border-gray-200">
                   <button
                     onClick={() => {
-                      handleLogout()
-                      setIsMenuOpen(false)
+                      handleLogout();
+                      setIsMenuOpen(false);
                     }}
                     className="w-full py-2.5 text-red-600 font-medium hover:bg-red-50 rounded-lg transition-colors"
                   >
@@ -728,10 +810,16 @@ export function Navbar() {
             href="/"
             className={cn(
               "flex flex-col items-center justify-center py-2.5",
-              pathname === "/" ? "text-[#136C5B]" : "text-gray-500",
+              pathname === "/" ? "text-[#136C5B]" : "text-gray-500"
             )}
           >
-            <svg className="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+            <svg
+              className="h-5 w-5"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.5"
+            >
               <path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
             </svg>
             <span className="text-[10px] mt-0.5 font-medium">Home</span>
@@ -741,7 +829,9 @@ export function Navbar() {
             href="/products"
             className={cn(
               "flex flex-col items-center justify-center py-2.5",
-              pathname.includes("/products") ? "text-[#136C5B]" : "text-gray-500",
+              pathname.includes("/products")
+                ? "text-[#136C5B]"
+                : "text-gray-500"
             )}
           >
             <Search className="h-5 w-5" />
@@ -752,7 +842,7 @@ export function Navbar() {
             href="/wishlist"
             className={cn(
               "flex flex-col items-center justify-center py-2.5",
-              pathname === "/wishlist" ? "text-[#136C5B]" : "text-gray-500",
+              pathname === "/wishlist" ? "text-[#136C5B]" : "text-gray-500"
             )}
           >
             <Heart className="h-5 w-5" />
@@ -764,7 +854,7 @@ export function Navbar() {
               href="/cart"
               className={cn(
                 "flex flex-col items-center justify-center py-2.5 relative",
-                pathname === "/cart" ? "text-[#136C5B]" : "text-gray-500",
+                pathname === "/cart" ? "text-[#136C5B]" : "text-gray-500"
               )}
             >
               <div className="relative">
@@ -784,5 +874,5 @@ export function Navbar() {
       {/* Spacer for fixed header */}
       <div className="h-[96px] lg:h-[136px]" />
     </>
-  )
+  );
 }

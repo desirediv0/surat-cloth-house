@@ -66,13 +66,18 @@ export function Footer() {
             <div className="lg:col-span-1">
               <div className="mb-6">
                 <Link href="/" className="flex items-center">
-                  <Image src="/logo.png" alt="Surat Cloth House" width={100} height={50} />
+                  <Image
+                    src="/logo.png"
+                    alt="Surat Cloth House"
+                    width={120}
+                    height={50}
+                  />
                 </Link>
               </div>
               <p className="text-white/70 mb-6 text-sm leading-relaxed">
-                Premium women&apos;s fashion at Surat Cloth House. Discover elegant
-                Kurtis, Suits, Sarees, Western wear, and more. Your one-stop
-                destination for stylish women&apos;s clothing.
+                Premium women&apos;s fashion at Surat Cloth House. Discover
+                elegant Kurtis, Suits, Sarees, Western wear, and more. Your
+                one-stop destination for stylish women&apos;s clothing.
               </p>
 
               {/* Social media icons */}

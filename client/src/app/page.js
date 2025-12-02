@@ -403,7 +403,7 @@ const TestimonialsSection = () => {
 
                       {/* Quote Text */}
                       <p className="text-gray-700 text-sm md:text-base font-medium leading-relaxed mb-6 flex-grow">
-                        "{testimonial.quote}"
+                        &ldquo;{testimonial.quote}&rdquo;
                       </p>
 
                       {/* Star Rating */}

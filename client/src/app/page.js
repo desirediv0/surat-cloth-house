@@ -146,11 +146,10 @@ const HeroCarousel = () => {
               <button
                 key={index}
                 onClick={() => api?.scrollTo(index)}
-                className={`w-2 h-2  rounded-full transition-all duration-300 ${
-                  index === currentSlide
-                    ? "bg-white scale-125 shadow-lg"
-                    : "bg-white/50 hover:bg-white/70"
-                }`}
+                className={`w-2 h-2  rounded-full transition-all duration-300 ${index === currentSlide
+                  ? "bg-white scale-125 shadow-lg"
+                  : "bg-white/50 hover:bg-white/70"
+                  }`}
                 aria-label={`Go to slide ${index + 1}`}
               />
             ))}
@@ -450,11 +449,10 @@ const TestimonialsSection = () => {
               <button
                 key={index}
                 onClick={() => api?.scrollTo(index)}
-                className={`w-2 h-2 rounded-full transition-all duration-300 ${
-                  index === currentSlide
-                    ? "bg-[#136C5B] w-8"
-                    : "bg-gray-300 hover:bg-gray-400"
-                }`}
+                className={`w-2 h-2 rounded-full transition-all duration-300 ${index === currentSlide
+                  ? "bg-[#136C5B] w-8"
+                  : "bg-gray-300 hover:bg-gray-400"
+                  }`}
                 aria-label={`Go to slide ${index + 1}`}
               />
             ))}
@@ -973,7 +971,7 @@ export default function Home() {
           <div className="container mx-auto px-4">
             <div className="text-center mb-10">
               <h2 className="text-3xl md:text-4xl font-light tracking-wide mb-3 text-gray-900">
-                Men's Collection
+                Men&apos;s Collection
               </h2>
               <p className="text-gray-600 max-w-2xl mx-auto text-sm">
                 Stylish and comfortable clothing for men
@@ -995,7 +993,7 @@ export default function Home() {
           <div className="container mx-auto px-4">
             <div className="text-center mb-10">
               <h2 className="text-3xl md:text-4xl font-light tracking-wide mb-3 text-gray-900">
-                Women's Collection
+                Women&apos;s Collection
               </h2>
               <p className="text-gray-600 max-w-2xl mx-auto text-sm">
                 Trendy and elegant fashion for women

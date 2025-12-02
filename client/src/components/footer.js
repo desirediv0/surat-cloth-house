@@ -70,9 +70,9 @@ export function Footer() {
                 </Link>
               </div>
               <p className="text-white/70 mb-6 text-sm leading-relaxed">
-                Premium women's fashion at Surat Cloth House. Discover elegant
+                Premium women&apos;s fashion at Surat Cloth House. Discover elegant
                 Kurtis, Suits, Sarees, Western wear, and more. Your one-stop
-                destination for stylish women's clothing.
+                destination for stylish women&apos;s clothing.
               </p>
 
               {/* Social media icons */}

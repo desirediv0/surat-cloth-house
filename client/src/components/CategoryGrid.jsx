@@ -151,7 +151,7 @@ const CategoryGrid = () => {
         <div className="text-center mb-6 sm:mb-8">
           <Headtext text="Shop By Category" />
           <p className="text-gray-600 text-sm sm:text-base my-6 ">
-            Discover our wide range of women's fashion categories
+            Discover our wide range of women&apos;s fashion categories
           </p>
         </div>
         <div className="grid grid-cols-3 sm:grid-cols-4 lg:grid-cols-6 gap-4">

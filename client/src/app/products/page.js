@@ -129,9 +129,9 @@ function ProductsContent() {
       filters.color === newFiltersFromURL.color &&
       filters.size === newFiltersFromURL.size &&
       String(filters.minPrice || "") ===
-        String(newFiltersFromURL.minPrice || "") &&
+      String(newFiltersFromURL.minPrice || "") &&
       String(filters.maxPrice || "") ===
-        String(newFiltersFromURL.maxPrice || "") &&
+      String(newFiltersFromURL.maxPrice || "") &&
       filters.sort === newFiltersFromURL.sort &&
       filters.order === newFiltersFromURL.order;
 
@@ -200,8 +200,7 @@ function ProductsContent() {
           );
 
           response = await fetchApi(
-            `/public/products/type/${
-              filters.productType
+            `/public/products/type/${filters.productType
             }?${queryParams.toString()}`
           );
 
@@ -549,10 +548,10 @@ function ProductsContent() {
           />
           <div className="absolute inset-0 bg-gradient-to-r from-black/70 to-transparent flex flex-col justify-center px-6 md:pl-12">
             <h1 className="text-xl md:text-5xl font-bold text-white mb-2 md:mb-4">
-              WOMEN'S FASHION
+              WOMEN&apos;S FASHION
             </h1>
             <p className="text-sm md:text-xl text-white max-w-xl">
-              Discover elegant women's clothing - Kurtis, Suits, Sarees & more
+              Discover elegant women&apos;s clothing - Kurtis, Suits, Sarees & more
             </p>
           </div>
         </div>
@@ -573,11 +572,10 @@ function ProductsContent() {
         <div className="flex flex-col md:flex-row gap-6 md:gap-8">
           {/* Filters Sidebar */}
           <div
-            className={`md:w-1/4 lg:w-1/5 ${
-              mobileFiltersOpen
+            className={`md:w-1/4 lg:w-1/5 ${mobileFiltersOpen
                 ? "block fixed inset-0 z-50 bg-white p-4 overflow-auto"
                 : "hidden"
-            } md:block md:static md:z-auto md:bg-transparent md:p-0`}
+              } md:block md:static md:z-auto md:bg-transparent md:p-0`}
           >
             <div className="bg-white rounded-lg shadow-sm border sticky top-28">
               <div className="flex items-center justify-between p-4 border-b">
@@ -612,11 +610,10 @@ function ProductsContent() {
                   )}
                 </div>
                 <div
-                  className={`overflow-hidden transition-all duration-300 ease-in-out ${
-                    activeFilterSection === "search"
+                  className={`overflow-hidden transition-all duration-300 ease-in-out ${activeFilterSection === "search"
                       ? "max-h-[500px] opacity-100"
                       : "max-h-0 opacity-0"
-                  }`}
+                    }`}
                 >
                   <form
                     onSubmit={(e) => {
@@ -656,21 +653,19 @@ function ProductsContent() {
                   )}
                 </div>
                 <div
-                  className={`overflow-hidden transition-all duration-300 ease-in-out ${
-                    activeFilterSection === "categories"
+                  className={`overflow-hidden transition-all duration-300 ease-in-out ${activeFilterSection === "categories"
                       ? "max-h-[500px] opacity-100"
                       : "max-h-0 opacity-0"
-                  }`}
+                    }`}
                 >
                   <div className="space-y-2 max-h-60 overflow-y-auto">
                     {categories.map((category) => (
                       <div key={category.id} className="ml-2">
                         <div
-                          className={`cursor-pointer hover:text-[#136C5B] flex items-center ${
-                            filters.category === category.slug
+                          className={`cursor-pointer hover:text-[#136C5B] flex items-center ${filters.category === category.slug
                               ? "font-medium text-[#136C5B]"
                               : ""
-                          }`}
+                            }`}
                           onClick={() =>
                             handleFilterChange("category", category.slug)
                           }
@@ -683,11 +678,10 @@ function ProductsContent() {
                             {category.children.map((child) => (
                               <div
                                 key={child.id}
-                                className={`cursor-pointer hover:text-[#136C5B] text-sm ${
-                                  filters.category === child.slug
+                                className={`cursor-pointer hover:text-[#136C5B] text-sm ${filters.category === child.slug
                                     ? "font-medium text-[#136C5B]"
                                     : ""
-                                }`}
+                                  }`}
                                 onClick={() =>
                                   handleFilterChange("category", child.slug)
                                 }
@@ -717,21 +711,19 @@ function ProductsContent() {
                   )}
                 </div>
                 <div
-                  className={`overflow-hidden transition-all duration-300 ease-in-out ${
-                    activeFilterSection === "colors"
+                  className={`overflow-hidden transition-all duration-300 ease-in-out ${activeFilterSection === "colors"
                       ? "max-h-[500px] opacity-100"
                       : "max-h-0 opacity-0"
-                  }`}
+                    }`}
                 >
                   <div className="space-y-2 max-h-60 overflow-y-auto">
                     {colors.map((color) => (
                       <div
                         key={color.id}
-                        className={`cursor-pointer hover:text-[#136C5B] ml-2 flex items-center ${
-                          selectedColors.includes(color.id)
+                        className={`cursor-pointer hover:text-[#136C5B] ml-2 flex items-center ${selectedColors.includes(color.id)
                             ? "font-medium text-[#136C5B]"
                             : ""
-                        }`}
+                          }`}
                         onClick={() => handleColorChange(color.id)}
                       >
                         <div className="w-4 h-4 border border-gray-300 rounded mr-2 flex items-center justify-center">
@@ -776,21 +768,19 @@ function ProductsContent() {
                   )}
                 </div>
                 <div
-                  className={`overflow-hidden transition-all duration-300 ease-in-out ${
-                    activeFilterSection === "sizes"
+                  className={`overflow-hidden transition-all duration-300 ease-in-out ${activeFilterSection === "sizes"
                       ? "max-h-[500px] opacity-100"
                       : "max-h-0 opacity-0"
-                  }`}
+                    }`}
                 >
                   <div className="space-y-2 max-h-60 overflow-y-auto">
                     {sizes.map((size) => (
                       <div
                         key={size.id}
-                        className={`cursor-pointer hover:text-[#136C5B] ml-2 flex items-center ${
-                          selectedSizes.includes(size.id)
+                        className={`cursor-pointer hover:text-[#136C5B] ml-2 flex items-center ${selectedSizes.includes(size.id)
                             ? "font-medium text-[#136C5B]"
                             : ""
-                        }`}
+                          }`}
                         onClick={() => handleSizeChange(size.id)}
                       >
                         <div className="w-4 h-4 border border-gray-300 rounded mr-2 flex items-center justify-center">
@@ -845,12 +835,12 @@ function ProductsContent() {
                     filters.sort === "createdAt" && filters.order === "desc"
                       ? "newest"
                       : filters.sort === "createdAt" && filters.order === "asc"
-                      ? "oldest"
-                      : filters.sort === "name" && filters.order === "asc"
-                      ? "name-asc"
-                      : filters.sort === "name" && filters.order === "desc"
-                      ? "name-desc"
-                      : "newest"
+                        ? "oldest"
+                        : filters.sort === "name" && filters.order === "asc"
+                          ? "name-asc"
+                          : filters.sort === "name" && filters.order === "desc"
+                            ? "name-desc"
+                            : "newest"
                   }
                 >
                   <option value="newest">Featured</option>
@@ -870,102 +860,102 @@ function ProductsContent() {
               selectedSizes.length > 0 ||
               filters.minPrice ||
               filters.maxPrice) && (
-              <div className="flex flex-wrap items-center gap-2 mb-6 p-3 bg-gray-50 rounded-md border">
-                <span className="text-sm font-medium">Active Filters:</span>
+                <div className="flex flex-wrap items-center gap-2 mb-6 p-3 bg-gray-50 rounded-md border">
+                  <span className="text-sm font-medium">Active Filters:</span>
 
-                {filters.search && (
-                  <div className="bg-[#136C5B] text-white text-xs px-2 py-1 rounded-md flex items-center">
-                    <span>Search: {filters.search}</span>
-                    <button
-                      onClick={() => handleFilterChange("search", "")}
-                      className="ml-1"
-                    >
-                      <X className="h-3 w-3" />
-                    </button>
-                  </div>
-                )}
+                  {filters.search && (
+                    <div className="bg-[#136C5B] text-white text-xs px-2 py-1 rounded-md flex items-center">
+                      <span>Search: {filters.search}</span>
+                      <button
+                        onClick={() => handleFilterChange("search", "")}
+                        className="ml-1"
+                      >
+                        <X className="h-3 w-3" />
+                      </button>
+                    </div>
+                  )}
 
-                {filters.category && (
-                  <div className="bg-[#136C5B] text-white text-xs px-2 py-1 rounded-md flex items-center">
-                    <span>
-                      Category:{" "}
-                      {categories.find((c) => c.slug === filters.category)
-                        ?.name || filters.category}
-                    </span>
-                    <button
-                      onClick={() => handleFilterChange("category", "")}
-                      className="ml-1"
-                    >
-                      <X className="h-3 w-3" />
-                    </button>
-                  </div>
-                )}
+                  {filters.category && (
+                    <div className="bg-[#136C5B] text-white text-xs px-2 py-1 rounded-md flex items-center">
+                      <span>
+                        Category:{" "}
+                        {categories.find((c) => c.slug === filters.category)
+                          ?.name || filters.category}
+                      </span>
+                      <button
+                        onClick={() => handleFilterChange("category", "")}
+                        className="ml-1"
+                      >
+                        <X className="h-3 w-3" />
+                      </button>
+                    </div>
+                  )}
 
-                {selectedColors.length > 0 && (
-                  <div className="bg-[#136C5B] text-white text-xs px-2 py-1 rounded-md flex items-center">
-                    <span>
-                      Color:{" "}
-                      {colors.find((c) => c.id === selectedColors[0])?.name ||
-                        selectedColors[0]}
-                    </span>
-                    <button
-                      onClick={() => {
-                        setSelectedColors([]);
-                        handleFilterChange("color", "");
-                      }}
-                      className="ml-1"
-                    >
-                      <X className="h-3 w-3" />
-                    </button>
-                  </div>
-                )}
+                  {selectedColors.length > 0 && (
+                    <div className="bg-[#136C5B] text-white text-xs px-2 py-1 rounded-md flex items-center">
+                      <span>
+                        Color:{" "}
+                        {colors.find((c) => c.id === selectedColors[0])?.name ||
+                          selectedColors[0]}
+                      </span>
+                      <button
+                        onClick={() => {
+                          setSelectedColors([]);
+                          handleFilterChange("color", "");
+                        }}
+                        className="ml-1"
+                      >
+                        <X className="h-3 w-3" />
+                      </button>
+                    </div>
+                  )}
 
-                {selectedSizes.length > 0 && (
-                  <div className="bg-[#136C5B] text-white text-xs px-2 py-1 rounded-md flex items-center">
-                    <span>
-                      Size:{" "}
-                      {sizes.find((s) => s.id === selectedSizes[0])?.display ||
-                        sizes.find((s) => s.id === selectedSizes[0])?.name ||
-                        selectedSizes[0]}
-                    </span>
-                    <button
-                      onClick={() => {
-                        setSelectedSizes([]);
-                        handleFilterChange("size", "");
-                      }}
-                      className="ml-1"
-                    >
-                      <X className="h-3 w-3" />
-                    </button>
-                  </div>
-                )}
+                  {selectedSizes.length > 0 && (
+                    <div className="bg-[#136C5B] text-white text-xs px-2 py-1 rounded-md flex items-center">
+                      <span>
+                        Size:{" "}
+                        {sizes.find((s) => s.id === selectedSizes[0])?.display ||
+                          sizes.find((s) => s.id === selectedSizes[0])?.name ||
+                          selectedSizes[0]}
+                      </span>
+                      <button
+                        onClick={() => {
+                          setSelectedSizes([]);
+                          handleFilterChange("size", "");
+                        }}
+                        className="ml-1"
+                      >
+                        <X className="h-3 w-3" />
+                      </button>
+                    </div>
+                  )}
 
-                {(filters.minPrice || filters.maxPrice) && (
-                  <div className="bg-[#136C5B] text-white text-xs px-2 py-1 rounded-md flex items-center">
-                    <span>
-                      Price: {filters.minPrice || "0"} -{" "}
-                      {filters.maxPrice || "∞"}
-                    </span>
-                    <button
-                      onClick={() => {
-                        handleFilterChange("minPrice", "");
-                        handleFilterChange("maxPrice", "");
-                      }}
-                      className="ml-1"
-                    >
-                      <X className="h-3 w-3" />
-                    </button>
-                  </div>
-                )}
+                  {(filters.minPrice || filters.maxPrice) && (
+                    <div className="bg-[#136C5B] text-white text-xs px-2 py-1 rounded-md flex items-center">
+                      <span>
+                        Price: {filters.minPrice || "0"} -{" "}
+                        {filters.maxPrice || "∞"}
+                      </span>
+                      <button
+                        onClick={() => {
+                          handleFilterChange("minPrice", "");
+                          handleFilterChange("maxPrice", "");
+                        }}
+                        className="ml-1"
+                      >
+                        <X className="h-3 w-3" />
+                      </button>
+                    </div>
+                  )}
 
-                <button
-                  onClick={clearFilters}
-                  className="text-xs text-[#136C5B] underline ml-2"
-                >
-                  Clear All
-                </button>
-              </div>
-            )}
+                  <button
+                    onClick={clearFilters}
+                    className="text-xs text-[#136C5B] underline ml-2"
+                  >
+                    Clear All
+                  </button>
+                </div>
+              )}
 
             {/* Products Grid */}
             {loading && products.length === 0 ? (
@@ -1058,11 +1048,11 @@ function ProductsContent() {
               <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-2 md:gap-4">
                 {loading
                   ? [...Array(pagination.limit || 12)].map((_, index) => (
-                      <ProductCardSkeleton key={index} />
-                    ))
+                    <ProductCardSkeleton key={index} />
+                  ))
                   : products.map((product) => (
-                      <ProductCard key={product.id} product={product} />
-                    ))}
+                    <ProductCard key={product.id} product={product} />
+                  ))}
               </div>
             )}
 
@@ -1093,11 +1083,10 @@ function ProductsContent() {
                           key={page}
                           onClick={() => handlePageChange(page)}
                           disabled={loading}
-                          className={`px-3 py-2 text-sm ${
-                            pagination.page === page
+                          className={`px-3 py-2 text-sm ${pagination.page === page
                               ? "bg-[#136C5B] text-white"
                               : "hover:bg-gray-100"
-                          }`}
+                            }`}
                         >
                           {page}
                         </button>

@@ -849,3 +849,82 @@ export const weights = {
     );
   },
 };
+
+// Banners Management
+export const banners = {
+  getBanners: (params = {}) => {
+    return api.get("/api/admin/banners", { params });
+  },
+  getBannerById: (bannerId: string) => {
+    return api.get(`/api/admin/banners/${bannerId}`);
+  },
+  createBanner: (data: {
+    title?: string;
+    subtitle?: string;
+    link?: string;
+    position?: number;
+    isPublished?: boolean;
+    isActive?: boolean;
+    desktopImage: File;
+    mobileImage: File;
+  }) => {
+    const formData = new FormData();
+    if (data.title) formData.append("title", data.title);
+    if (data.subtitle) formData.append("subtitle", data.subtitle);
+    if (data.link) formData.append("link", data.link);
+    if (data.position !== undefined)
+      formData.append("position", data.position.toString());
+    if (data.isPublished !== undefined)
+      formData.append("isPublished", data.isPublished.toString());
+    if (data.isActive !== undefined)
+      formData.append("isActive", data.isActive.toString());
+    formData.append("desktopImage", data.desktopImage);
+    formData.append("mobileImage", data.mobileImage);
+
+    return api.post("/api/admin/banners", formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+  },
+  updateBanner: (
+    bannerId: string,
+    data: {
+      title?: string;
+      subtitle?: string;
+      link?: string;
+      position?: number;
+      isPublished?: boolean;
+      isActive?: boolean;
+      desktopImage?: File | null;
+      mobileImage?: File | null;
+    }
+  ) => {
+    const formData = new FormData();
+    if (data.title !== undefined) formData.append("title", data.title || "");
+    if (data.subtitle !== undefined)
+      formData.append("subtitle", data.subtitle || "");
+    if (data.link !== undefined)
+      formData.append("link", data.link || "/products");
+    if (data.position !== undefined)
+      formData.append("position", data.position.toString());
+    if (data.isPublished !== undefined)
+      formData.append("isPublished", data.isPublished.toString());
+    if (data.isActive !== undefined)
+      formData.append("isActive", data.isActive.toString());
+    if (data.desktopImage) formData.append("desktopImage", data.desktopImage);
+    if (data.mobileImage) formData.append("mobileImage", data.mobileImage);
+
+    return api.put(`/api/admin/banners/${bannerId}`, formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+  },
+  deleteBanner: (bannerId: string) => {
+    return api.delete(`/api/admin/banners/${bannerId}`);
+  },
+  togglePublishBanner: (bannerId: string) => {
+    return api.patch(`/api/admin/banners/${bannerId}/publish`);
+  },
+};

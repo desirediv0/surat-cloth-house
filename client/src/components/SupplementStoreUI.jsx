@@ -6,7 +6,7 @@ const SupplementStoreUI = () => {
   const router = useRouter();
 
   return (
-    <div className="bg-white py-12 md:py-16 px-4">
+    <div className="bg-white py-5 md:py-10 px-4">
       <div className="container mx-auto">
 
         {/* ---- MOBILE IMAGE (small screens) ---- */}
@@ -19,7 +19,7 @@ const SupplementStoreUI = () => {
             width={500}
             height={500}
             alt="Sales Mobile"
-            className="w-full h-full object-cover"
+            className="w-full h-full object-cover aspect-[9/16]"
           />
         </div>
 
@@ -33,7 +33,7 @@ const SupplementStoreUI = () => {
             width={1200}
             height={600}
             alt="Sales Desktop"
-            className="w-full h-full object-cover"
+            className="w-full h-full object-cover aspect-[16/7]"
           />
         </div>
 

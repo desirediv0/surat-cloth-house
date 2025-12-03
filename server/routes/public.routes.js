@@ -18,6 +18,7 @@ import {
   getBrandsByTag,
   getBrandBySlug,
 } from "../controllers/public.controller.js";
+import { getPublishedBanners } from "../controllers/admin.banner.controller.js";
 
 const router = express.Router();
 
@@ -40,5 +41,8 @@ router.get("/sizes", getAllSizes);
 // Brands
 router.get("/brands-by-tag", getBrandsByTag);
 router.get("/brand/:slug", getBrandBySlug);
+
+// Banners
+router.get("/banners", getPublishedBanners);
 
 export default router;

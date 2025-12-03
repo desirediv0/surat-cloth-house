@@ -28,10 +28,52 @@ const HeroCarousel = () => {
   const [api, setApi] = useState(null);
   const [autoplay, setAutoplay] = useState(true);
   const [isMobile, setIsMobile] = useState(false);
+  const [banners, setBanners] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   const router = useRouter();
 
-  const slides = [
+  // Fetch banners from API
+  useEffect(() => {
+    const fetchBanners = async () => {
+      try {
+        setIsLoading(true);
+        const response = await fetchApi("/public/banners");
+
+        // Handle response: fetchApi returns { success, data: { banners: [...] }, message }
+        if (
+          response &&
+          response.success &&
+          response.data &&
+          response.data.banners
+        ) {
+          const bannersArray = response.data.banners;
+
+          // Only set banners if array has items (length > 0)
+          if (Array.isArray(bannersArray) && bannersArray.length > 0) {
+            setBanners(bannersArray);
+          } else {
+            // Empty array from API - use fallback
+            setBanners([]);
+          }
+        } else {
+          // No banners in response - use fallback
+          setBanners([]);
+        }
+      } catch (error) {
+        console.error("Error fetching banners:", error);
+        // On error, set empty array so fallback slides will show
+        setBanners([]);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchBanners();
+  }, []);
+
+  // Fallback slides - only used when banners.length === 0
+  const fallbackSlides = [
     {
       ctaLink: "/products",
       img: bg1,
@@ -61,6 +103,19 @@ const HeroCarousel = () => {
       subtitle: "Stay Cool & Stylish",
     },
   ];
+
+  // Use banners from API only if length > 0, otherwise use fallback
+  // If banners.length === 0, show fallback slides
+  const slides =
+    banners.length > 0
+      ? banners.map((banner) => ({
+        ctaLink: banner.link || "/products",
+        img: banner.desktopImage,
+        smimg: banner.mobileImage,
+        title: banner.title || "",
+        subtitle: banner.subtitle || "",
+      }))
+      : fallbackSlides;
 
   useEffect(() => {
     const checkMobile = () => {
@@ -99,8 +154,36 @@ const HeroCarousel = () => {
   }, [api]);
 
   const handleSlideClick = (ctaLink) => {
-    router.push(ctaLink);
+    if (ctaLink) {
+      router.push(ctaLink);
+    } else {
+      router.push("/products");
+    }
   };
+
+  // Loading state - show full page loading
+  if (isLoading) {
+    return (
+      <div className="relative w-screen left-1/2 right-1/2 -ml-[50vw] -mr-[50vw]">
+        <div className="relative overflow-hidden w-full aspect-[9/16] md:aspect-[16/9] bg-gradient-to-br from-gray-100 to-gray-200">
+          <div className="absolute inset-0 flex flex-col items-center justify-center">
+            <div className="text-center space-y-4">
+              <div className="w-20 h-20 border-4 border-[#166454] border-t-transparent rounded-full animate-spin mx-auto"></div>
+              <div>
+                <p className="text-gray-700 font-semibold text-lg mb-1">
+                  Loading ....
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (slides.length === 0) {
+    return null;
+  }
 
   return (
     <div className="relative w-screen left-1/2 right-1/2 -ml-[50vw] -mr-[50vw]">
@@ -118,7 +201,7 @@ const HeroCarousel = () => {
             {slides.map((slide, index) => (
               <CarouselItem key={index} className="pl-0 basis-full">
                 <div
-                  className="relative aspect-[9/16] md:aspect-[16/9] w-full cursor-pointer group overflow-hidden"
+                  className="relative aspect-[9/16] md:aspect-[16/7] w-full cursor-pointer group overflow-hidden"
                   onClick={() => handleSlideClick(slide.ctaLink)}
                 >
                   {/* Background Image */}
@@ -127,7 +210,7 @@ const HeroCarousel = () => {
                     alt={slide.title || "Hero banner"}
                     fill
                     priority={index === 0}
-                    className="object-cover transition-transform duration-700 group-hover:scale-105"
+                    className="object-cover transition-transform duration-700"
                     sizes="100vw"
                   />
                 </div>
@@ -354,7 +437,7 @@ const TestimonialsSection = () => {
   }, [api]);
 
   return (
-    <section className="py-5 md:py-10  bg-gradient-to-b from-gray-50 to-white relative">
+    <section className="py-5 md:py-8  bg-gradient-to-b from-gray-50 to-white relative">
       <div className="container mx-auto px-4 relative z-10">
         <div className="text-center mb-5 md:mb-12">
           <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-3">
@@ -838,7 +921,7 @@ export default function Home() {
 
       {/* FEATURED PRODUCTS */}
       {featuredProducts.length > 0 && (
-        <section className="py-5 md:py-10  bg-white">
+        <section className="py-5 md:py-8  bg-white">
           <div className="container mx-auto px-4">
             <div className="text-center mb-5">
               <h2 className="text-3xl md:text-4xl font-light tracking-wide mb-3 text-gray-900">
@@ -857,17 +940,9 @@ export default function Home() {
           </div>
         </section>
       )}
-
-      <SupplementStoreUI />
-
-      {/* NEW BRANDS */}
-      <BrandCarousel tag="NEW" title="NEW BRANDS" />
-
-      <CategoryGrid />
-
       {/* BEST SELLERS */}
       {bestsellerProducts.length > 0 && (
-        <section className="py-5 md:py-10  bg-gray-50">
+        <section className="py-5 md:py-8  bg-gray-50">
           <div className="container mx-auto px-4">
             <div className="text-center mb-5">
               <h2 className="text-3xl md:text-4xl font-light tracking-wide mb-3 text-gray-900">
@@ -889,7 +964,7 @@ export default function Home() {
 
       {/* TRENDING */}
       {trendingProducts.length > 0 && (
-        <section className="py-5 md:py-10  bg-white">
+        <section className="py-5 md:py-8  bg-white">
           <div className="container mx-auto px-4">
             <div className="text-center mb-5">
               <h2 className="text-3xl md:text-4xl font-light tracking-wide mb-3 text-gray-900">
@@ -909,9 +984,18 @@ export default function Home() {
         </section>
       )}
 
+      <SupplementStoreUI />
+
+      {/* NEW BRANDS */}
+      <BrandCarousel tag="NEW" title="NEW BRANDS" />
+
+      <CategoryGrid />
+
+
+
       {/* NEW ARRIVALS */}
       {newProducts.length > 0 && (
-        <section className="py-5 md:py-10  bg-gray-50">
+        <section className="py-5 md:py-8  bg-gray-50">
           <div className="container mx-auto px-4">
             <div className="text-center mb-5">
               <h2 className="text-3xl md:text-4xl font-light tracking-wide mb-3 text-gray-900">
@@ -935,7 +1019,7 @@ export default function Home() {
 
       {/* KURTIS */}
       {kurtisProducts.length > 0 && (
-        <section className="py-5 md:py-10  bg-white">
+        <section className="py-5 md:py-8  bg-white">
           <div className="container mx-auto px-4">
             <div className="text-center mb-5">
               <h2 className="text-3xl md:text-4xl font-light tracking-wide mb-3 text-gray-900">
@@ -957,7 +1041,7 @@ export default function Home() {
 
       {/* SUITS */}
       {suitsProducts.length > 0 && (
-        <section className="py-5 md:py-10  bg-gray-50">
+        <section className="py-5 md:py-8  bg-gray-50">
           <div className="container mx-auto px-4">
             <div className="text-center mb-5">
               <h2 className="text-3xl md:text-4xl font-light tracking-wide mb-3 text-gray-900">
@@ -979,7 +1063,7 @@ export default function Home() {
 
       {/* SAREES */}
       {sareesProducts.length > 0 && (
-        <section className="py-5 md:py-10  bg-white">
+        <section className="py-5 md:py-8  bg-white">
           <div className="container mx-auto px-4">
             <div className="text-center mb-5">
               <h2 className="text-3xl md:text-4xl font-light tracking-wide mb-3 text-gray-900">
@@ -1001,7 +1085,7 @@ export default function Home() {
 
       {/* WESTERN */}
       {westernProducts.length > 0 && (
-        <section className="py-5 md:py-10  bg-gray-50">
+        <section className="py-5 md:py-8  bg-gray-50">
           <div className="container mx-auto px-4">
             <div className="text-center mb-5">
               <h2 className="text-3xl md:text-4xl font-light tracking-wide mb-3 text-gray-900">
@@ -1023,7 +1107,7 @@ export default function Home() {
 
       {/* SALE & OFFERS */}
       {saleProducts.length > 0 && (
-        <section className="py-5 md:py-10  bg-black text-white">
+        <section className="py-5 md:py-8  bg-black text-white">
           <div className="container mx-auto px-4">
             <div className="text-center mb-5">
               <h2 className="text-3xl md:text-4xl font-light tracking-wide mb-3 text-white">
@@ -1045,7 +1129,7 @@ export default function Home() {
 
       {/* PREMIUM COLLECTION */}
       {premiumProducts.length > 0 && (
-        <section className="py-5 md:py-10  bg-gray-50">
+        <section className="py-5 md:py-8  bg-gray-50">
           <div className="container mx-auto px-4">
             <div className="text-center mb-5">
               <h2 className="text-3xl md:text-4xl font-light tracking-wide mb-3 text-gray-900">
@@ -1067,7 +1151,7 @@ export default function Home() {
 
       {/* SUMMER COLLECTION */}
       {summerProducts.length > 0 && (
-        <section className="py-5 md:py-10  bg-white">
+        <section className="py-5 md:py-8  bg-white">
           <div className="container mx-auto px-4">
             <div className="text-center mb-5">
               <h2 className="text-3xl md:text-4xl font-light tracking-wide mb-3 text-gray-900">
@@ -1089,7 +1173,7 @@ export default function Home() {
 
       {/* WINTER COLLECTION */}
       {winterProducts.length > 0 && (
-        <section className="py-5 md:py-10  bg-gray-50">
+        <section className="py-5 md:py-8  bg-gray-50">
           <div className="container mx-auto px-4">
             <div className="text-center mb-5">
               <h2 className="text-3xl md:text-4xl font-light tracking-wide mb-3 text-gray-900">
@@ -1111,7 +1195,7 @@ export default function Home() {
 
       {/* PARTY WEAR */}
       {partyProducts.length > 0 && (
-        <section className="py-5 md:py-10  bg-white">
+        <section className="py-5 md:py-8  bg-white">
           <div className="container mx-auto px-4">
             <div className="text-center mb-5">
               <h2 className="text-3xl md:text-4xl font-light tracking-wide mb-3 text-gray-900">
@@ -1133,7 +1217,7 @@ export default function Home() {
 
       {/* CASUAL WEAR */}
       {casualProducts.length > 0 && (
-        <section className="py-5 md:py-10  bg-gray-50">
+        <section className="py-5 md:py-8  bg-gray-50">
           <div className="container mx-auto px-4">
             <div className="text-center mb-5">
               <h2 className="text-3xl md:text-4xl font-light tracking-wide mb-3 text-gray-900">
@@ -1155,7 +1239,7 @@ export default function Home() {
 
       {/* FORMAL WEAR */}
       {formalProducts.length > 0 && (
-        <section className="py-5 md:py-10  bg-white">
+        <section className="py-5 md:py-8  bg-white">
           <div className="container mx-auto px-4">
             <div className="text-center mb-5">
               <h2 className="text-3xl md:text-4xl font-light tracking-wide mb-3 text-gray-900">

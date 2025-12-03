@@ -45,6 +45,7 @@ export enum Resource {
   FAQS = "faqs",
   ANALYTICS = "analytics",
   BRANDS = "brands",
+  BANNERS = "banners",
 }
 
 export enum Action {

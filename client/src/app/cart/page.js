@@ -528,18 +528,19 @@ export default function CartPage() {
                           ? "eligible item"
                           : "eligible items"}
                         {cart.items?.length
-                          ? ` (${coupon.matchedItems || 0} of ${cart.items.length
-                          })`
+                          ? ` (${coupon.matchedItems || 0} of ${
+                              cart.items.length
+                            })`
                           : ""}
                       </p>
                     )}
                     {((parseFloat(coupon.discountValue) > 90 &&
                       coupon.discountType === "PERCENTAGE") ||
                       coupon.isDiscountCapped) && (
-                        <p className="text-xs text-amber-700 mt-2 bg-amber-50 px-2 py-1 rounded">
-                          *Maximum discount capped at 90%
-                        </p>
-                      )}
+                      <p className="text-xs text-amber-700 mt-2 bg-amber-50 px-2 py-1 rounded">
+                        *Maximum discount capped at 90%
+                      </p>
+                    )}
                   </div>
                   <button
                     onClick={handleRemoveCoupon}
@@ -559,10 +560,11 @@ export default function CartPage() {
                       onChange={(e) =>
                         setCouponCode(e.target.value.toUpperCase())
                       }
-                      className={`flex-1 border-2 ${couponError
-                        ? "border-red-300 focus-visible:ring-red-300"
-                        : "border-gray-300 focus-visible:ring-[#166454]"
-                        }`}
+                      className={`flex-1 border-2 ${
+                        couponError
+                          ? "border-red-300 focus-visible:ring-red-300"
+                          : "border-gray-300 focus-visible:ring-[#166454]"
+                      }`}
                     />
                     <Button
                       type="submit"

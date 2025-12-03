@@ -1100,7 +1100,7 @@ export default function Home() {
 
       <BenefitsSec />
       <TestimonialsSection />
-      <NewsletterSection />
+      {/* <NewsletterSection /> */}
     </div>
   );
 }

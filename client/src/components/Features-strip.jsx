@@ -18,7 +18,7 @@ export default function FeaturesSection() {
     {
       icon: CreditCard,
       title: "Easy Returns",
-      description: "30-day return policy",
+      description: "7-day return policy",
       color: "#22c55e",
     },
     {
@@ -33,7 +33,7 @@ export default function FeaturesSection() {
     <section className="relative py-8 md:py-12 bg-gray-50">
       {/* Top dark section */}
       <div className="absolute top-0 left-0 w-full h-16 md:h-24 bg-gradient-to-b from-gray-900 to-gray-800"></div>
-      
+
       <div className="container mx-auto px-4 max-w-7xl relative z-10 pt-8 md:pt-12">
         <motion.div
           className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6 lg:gap-8"

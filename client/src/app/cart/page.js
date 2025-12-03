@@ -31,22 +31,26 @@ const CartItem = React.memo(
     // Get product image - priority: variant images > product image > item image > placeholder
     const getProductImage = () => {
       // Priority 1: Variant images (from server cart)
-      if (item.variant?.images && Array.isArray(item.variant.images) && item.variant.images.length > 0) {
+      if (
+        item.variant?.images &&
+        Array.isArray(item.variant.images) &&
+        item.variant.images.length > 0
+      ) {
         const primaryImage = item.variant.images.find((img) => img.isPrimary);
         const imageUrl = primaryImage?.url || item.variant.images[0]?.url;
         if (imageUrl) return getImageUrl(imageUrl);
       }
-      
+
       // Priority 2: Product image (from server cart)
       if (item.product?.image) {
         return getImageUrl(item.product.image);
       }
-      
+
       // Priority 3: Direct image property (from guest cart)
       if (item.image) {
         return getImageUrl(item.image);
       }
-      
+
       // Fallback to placeholder
       return "/placeholder.jpg";
     };
@@ -57,15 +61,15 @@ const CartItem = React.memo(
       if (item.variantName && item.variantName.trim() !== "") {
         return item.variantName;
       }
-      
+
       // Try to get color and size from variant object (server cart)
       let color = item.variant?.color?.name;
       let size = item.variant?.size?.name;
-      
+
       // Fallback to direct properties (guest cart or legacy)
       if (!color) color = item.color?.name;
       if (!size) size = item.size?.name;
-      
+
       // Build variant string
       if (color && size) {
         return `${color} • ${size}`;
@@ -74,7 +78,7 @@ const CartItem = React.memo(
       } else if (size) {
         return size;
       }
-      
+
       // Return null if no variant info - don't show "Standard"
       return null;
     };
@@ -85,31 +89,32 @@ const CartItem = React.memo(
     const productSlug = item.productSlug || item.product?.slug || "#";
 
     return (
-      <div className="p-4 grid grid-cols-1 md:grid-cols-12 gap-4 items-center">
+      <div className="p-4 md:p-5 grid grid-cols-1 md:grid-cols-12 gap-4 items-center hover:bg-gray-50/50 transition-colors duration-200">
         <div className="md:col-span-6 flex items-center">
-          <div className="relative h-20 w-20 bg-gray-100 rounded overflow-hidden mr-4 flex-shrink-0">
+          <div className="relative h-24 w-24 md:h-28 md:w-28 bg-gray-100 rounded-lg overflow-hidden mr-4 flex-shrink-0 shadow-sm border border-gray-200 group">
             <Image
               src={productImage}
               alt={productName}
               fill
-              className="object-cover"
-              sizes="80px"
+              className="object-cover group-hover:scale-105 transition-transform duration-300"
+              sizes="112px"
             />
           </div>
-          <div>
+          <div className="flex-1 min-w-0">
             <Link
               href={`/products/${productSlug}`}
-              className="font-medium hover:text-[#166454] transition-colors"
+              className="font-semibold text-gray-900 hover:text-[#166454] transition-colors line-clamp-2"
             >
               {productName}
             </Link>
             {variantName && (
-              <div className="text-sm text-gray-600 mt-1 flex items-center gap-2">
+              <div className="text-sm text-gray-600 mt-2 flex items-center gap-2">
                 {(item.variant?.color?.hexCode || item.color?.hexCode) && (
                   <div
-                    className="w-3 h-3 rounded-full border border-gray-300 flex-shrink-0"
-                    style={{ 
-                      backgroundColor: item.variant?.color?.hexCode || item.color?.hexCode 
+                    className="w-4 h-4 rounded-full border-2 border-gray-300 flex-shrink-0 shadow-sm"
+                    style={{
+                      backgroundColor:
+                        item.variant?.color?.hexCode || item.color?.hexCode,
                     }}
                   />
                 )}
@@ -120,21 +125,23 @@ const CartItem = React.memo(
         </div>
 
         <div className="md:col-span-2 flex items-center justify-between md:justify-center">
-          <span className="md:hidden">Price:</span>
-          <span className="font-medium">{formatCurrency(item.price)}</span>
+          <span className="md:hidden font-medium text-gray-600">Price:</span>
+          <span className="font-semibold text-gray-900">
+            {formatCurrency(item.price)}
+          </span>
         </div>
 
         <div className="md:col-span-2 flex items-center justify-between md:justify-center">
-          <span className="md:hidden">Quantity:</span>
-          <div className="flex items-center border rounded-md">
+          <span className="md:hidden font-medium text-gray-600">Quantity:</span>
+          <div className="flex items-center border-2 border-gray-200 rounded-lg overflow-hidden shadow-sm">
             <button
               onClick={() => onUpdateQuantity(item.id, item.quantity, -1)}
-              className="px-2 py-1 hover:bg-gray-100 disabled:opacity-50"
+              className="px-3 py-2 hover:bg-[#166454] hover:text-white disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-200"
               disabled={isLoading || item.quantity <= 1}
             >
               <Minus className="h-4 w-4" />
             </button>
-            <span className="px-3 py-1">
+            <span className="px-4 py-2 min-w-[3rem] text-center font-semibold bg-white border-x border-gray-200">
               {isLoading ? (
                 <Loader2 className="h-4 w-4 animate-spin inline" />
               ) : (
@@ -143,7 +150,7 @@ const CartItem = React.memo(
             </span>
             <button
               onClick={() => onUpdateQuantity(item.id, item.quantity, 1)}
-              className="px-2 py-1 hover:bg-gray-100 disabled:opacity-50"
+              className="px-3 py-2 hover:bg-[#166454] hover:text-white disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-200"
               disabled={isLoading}
             >
               <Plus className="h-4 w-4" />
@@ -153,12 +160,16 @@ const CartItem = React.memo(
 
         <div className="md:col-span-2 flex items-center justify-between md:justify-center">
           <div className="flex items-center md:block">
-            <span className="md:hidden mr-2">Subtotal:</span>
-            <span className="font-medium">{formatCurrency(item.subtotal)}</span>
+            <span className="md:hidden mr-2 font-medium text-gray-600">
+              Subtotal:
+            </span>
+            <span className="font-bold text-gray-900 text-lg">
+              {formatCurrency(item.subtotal)}
+            </span>
           </div>
           <button
             onClick={() => onRemove(item.id)}
-            className="text-red-500 hover:text-red-700 ml-4 disabled:opacity-50"
+            className="text-red-500 hover:text-red-700 hover:bg-red-50 p-2 rounded-lg ml-4 disabled:opacity-50 transition-all duration-200"
             aria-label="Remove item"
             disabled={isLoading}
           >
@@ -205,7 +216,7 @@ export default function CartPage() {
       try {
         await updateCartItem(cartItemId, newQuantity);
         // Toast notification for success
-        toast.success("Cart updated successfully");
+        // toast.success("Cart updated successfully");
       } catch (err) {
         console.error("Error updating quantity:", err);
         toast.error(err.message || "Failed to update quantity");
@@ -218,7 +229,7 @@ export default function CartPage() {
     async (cartItemId) => {
       try {
         await removeFromCart(cartItemId);
-        toast.success("Item removed from cart");
+        // toast.success("Item removed from cart");
       } catch (err) {
         console.error("Error removing item:", err);
         toast.error("Failed to remove item");
@@ -290,7 +301,12 @@ export default function CartPage() {
   if (loading && (!cart.items || cart.items.length === 0)) {
     return (
       <div className="container mx-auto px-4 py-8">
-        <h1 className="text-2xl font-bold mb-6">Your Cart</h1>
+        <div className="mb-8">
+          <h1 className="text-3xl md:text-4xl font-light tracking-wide text-gray-900 mb-2 ">
+            Your Cart
+          </h1>
+          <div className="w-20 h-1 bg-[#166454]"></div>
+        </div>
         <div className="flex justify-center items-center h-64">
           <div className="w-12 h-12 border-4 border-[#166454] border-t-transparent rounded-full animate-spin"></div>
         </div>
@@ -302,17 +318,26 @@ export default function CartPage() {
   if ((!cart.items || cart.items.length === 0) && !error) {
     return (
       <div className="container mx-auto px-4 py-12">
-        <h1 className="text-2xl font-bold mb-6">Your Cart</h1>
-        <div className="bg-white p-8 rounded-lg shadow-sm text-center border">
-          <div className="inline-flex justify-center items-center bg-gray-100 p-6 rounded-full mb-4">
-            <ShoppingBag className="h-12 w-12 text-gray-400" />
+        <div className="mb-8">
+          <h1 className="text-3xl md:text-4xl font-light tracking-wide text-gray-900 mb-2">
+            Your Cart
+          </h1>
+          <div className="w-20 h-1 bg-[#166454]"></div>
+        </div>
+        <div className="bg-white p-8 md:p-12 rounded-lg shadow-md text-center border border-gray-200 max-w-2xl mx-auto">
+          <div className="inline-flex justify-center items-center bg-gradient-to-br from-gray-100 to-gray-200 p-6 rounded-full mb-6 shadow-inner">
+            <ShoppingBag className="h-16 w-16 text-gray-400" />
           </div>
-          <h2 className="text-xl font-semibold mb-3">Your cart is empty</h2>
-          <p className="text-gray-600 mb-6">
+          <h2 className="text-2xl font-semibold mb-3 text-gray-900">
+            Your cart is empty
+          </h2>
+          <p className="text-gray-600 mb-8 text-lg">
             Looks like you haven&apos;t added any products to your cart yet.
           </p>
           <Link href="/products">
-            <Button>Continue Shopping</Button>
+            <Button className="bg-[#166454] hover:bg-[#0d4a3d] text-white px-8 py-6 text-base font-semibold shadow-lg hover:shadow-xl transition-all duration-200">
+              Continue Shopping
+            </Button>
           </Link>
         </div>
       </div>
@@ -321,15 +346,20 @@ export default function CartPage() {
 
   return (
     <div className="container mx-auto px-4 py-8">
-      <h1 className="text-2xl font-bold mb-6">Your Cart</h1>
+      <div className="mb-8">
+        <h1 className="text-3xl md:text-4xl font-light tracking-wide text-gray-900 mb-2">
+          Your Cart
+        </h1>
+        <div className="w-20 h-1 bg-[#166454]"></div>
+      </div>
 
       {/* Guest cart notice */}
       {!isAuthenticated && cart.items.length > 0 && (
-        <div className="bg-gradient-to-r from-orange-500/10 to-blue-500/10 border border-orange-200 p-6 rounded-lg flex items-start mb-6 shadow-sm">
+        <div className="bg-gradient-to-r from-[#166454]/5 via-[#0d4a3d]/5 to-[#166454]/5 border-l-4 border-[#166454] p-6 rounded-lg flex items-start mb-6 shadow-md hover:shadow-lg transition-shadow duration-300">
           <div className="flex-shrink-0 mr-4">
-            <div className="w-12 h-12 bg-gradient-to-r from-orange-500 to-blue-500 rounded-full flex items-center justify-center">
+            <div className="w-14 h-14 bg-[#166454] rounded-full flex items-center justify-center shadow-lg">
               <svg
-                className="w-6 h-6 text-white"
+                className="w-7 h-7 text-white"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -344,8 +374,11 @@ export default function CartPage() {
             </div>
           </div>
           <div className="flex-1">
-            <h2 className="text-xl font-bold text-gray-900 mb-2">
+            <h2 className="text-xl font-bold text-gray-900 mb-2 flex items-center gap-2">
               Guest Shopping Cart
+              <span className="text-xs font-normal bg-[#166454]/10 text-[#166454] px-2 py-1 rounded-full">
+                Login Required
+              </span>
             </h2>
             <p className="text-gray-700 mb-4 leading-relaxed">
               You&apos;re currently shopping as a guest. To complete your
@@ -354,14 +387,14 @@ export default function CartPage() {
             </p>
             <div className="flex flex-col sm:flex-row gap-3">
               <Link href="/auth?redirect=cart">
-                <Button className="bg-gradient-to-r from-orange-500 to-blue-500 hover:from-orange-600 hover:to-blue-600 text-white font-semibold px-6 py-3 rounded-lg shadow-md hover:shadow-lg transition-all duration-200 transform hover:scale-105">
+                <Button className="bg-[#166454] hover:bg-[#0d4a3d] text-white font-semibold px-6 py-3 rounded-lg shadow-md hover:shadow-xl transition-all duration-200 transform hover:scale-[1.02]">
                   Log In to Continue
                 </Button>
               </Link>
               <Link href="/auth?redirect=cart">
                 <Button
                   variant="outline"
-                  className="border-2 border-gray-300 hover:border-[#166454] text-gray-700 hover:text-[#166454] font-semibold px-6 py-3 rounded-lg transition-all duration-200"
+                  className="border-2 border-[#166454] hover:bg-[#166454] hover:text-white text-[#166454] font-semibold px-6 py-3 rounded-lg transition-all duration-200"
                 >
                   Create Account
                 </Button>
@@ -373,13 +406,13 @@ export default function CartPage() {
 
       {/* Show merge progress */}
       {mergeProgress && (
-        <div className="bg-blue-50 p-4 rounded-md flex items-start mb-6">
-          <Loader2 className="text-blue-500 mr-3 mt-0.5 flex-shrink-0 animate-spin" />
+        <div className="bg-[#166454]/10 border-l-4 border-[#166454] p-4 rounded-md flex items-start mb-6 shadow-sm">
+          <Loader2 className="text-[#166454] mr-3 mt-0.5 flex-shrink-0 animate-spin" />
           <div>
-            <h2 className="text-lg font-semibold text-blue-700">
+            <h2 className="text-lg font-semibold text-[#166454]">
               Merging Cart
             </h2>
-            <p className="text-blue-600">{mergeProgress}</p>
+            <p className="text-[#0d4a3d]">{mergeProgress}</p>
           </div>
         </div>
       )}
@@ -387,12 +420,20 @@ export default function CartPage() {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         {/* Cart Items Section */}
         <div className="lg:col-span-2">
-          <div className="bg-white rounded-lg shadow-sm border overflow-hidden">
-            <div className="hidden md:grid grid-cols-12 gap-4 p-4 border-b bg-gray-50">
-              <div className="col-span-6 font-medium">Product</div>
-              <div className="col-span-2 font-medium text-center">Price</div>
-              <div className="col-span-2 font-medium text-center">Quantity</div>
-              <div className="col-span-2 font-medium text-center">Subtotal</div>
+          <div className="bg-white rounded-lg shadow-md border border-gray-200 overflow-hidden hover:shadow-lg transition-shadow duration-300">
+            <div className="hidden md:grid grid-cols-12 gap-4 p-4 border-b bg-gradient-to-r from-gray-50 to-gray-100">
+              <div className="col-span-6 font-semibold text-gray-900">
+                Product
+              </div>
+              <div className="col-span-2 font-semibold text-gray-900 text-center">
+                Price
+              </div>
+              <div className="col-span-2 font-semibold text-gray-900 text-center">
+                Quantity
+              </div>
+              <div className="col-span-2 font-semibold text-gray-900 text-center">
+                Subtotal
+              </div>
             </div>
 
             {/* Cart Items */}
@@ -409,19 +450,26 @@ export default function CartPage() {
             </div>
 
             {/* Cart Actions */}
-            <div className="p-4 border-t bg-gray-50 flex justify-between items-center">
+            <div className="p-4 md:p-5 border-t bg-gradient-to-r from-gray-50 to-gray-100 flex flex-col sm:flex-row justify-between items-center gap-3">
               <Link href="/products">
-                <Button variant="outline">Continue Shopping</Button>
+                <Button
+                  variant="outline"
+                  className="border-[#166454] text-[#166454] hover:bg-[#166454] hover:text-white transition-all duration-200"
+                >
+                  ← Continue Shopping
+                </Button>
               </Link>
               <Button
                 variant="outline"
                 onClick={handleClearCart}
-                className="text-red-500 border-red-200 hover:bg-red-50 hover:text-red-500"
+                className="text-red-600 border-red-300 hover:bg-red-50 hover:border-red-400 hover:text-red-700 transition-all duration-200"
                 disabled={loading}
               >
                 {loading ? (
                   <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                ) : null}
+                ) : (
+                  <Trash2 className="h-4 w-4 mr-2" />
+                )}
                 Clear Cart
               </Button>
             </div>
@@ -430,44 +478,72 @@ export default function CartPage() {
 
         {/* Cart Summary Section */}
         <div className="lg:col-span-1">
-          <div className="bg-white rounded-lg shadow-sm border p-4">
-            <h2 className="text-lg font-bold mb-4">Cart Summary</h2>
+          <div className="bg-white rounded-lg shadow-md border border-gray-200 p-5 md:p-6 sticky top-4 hover:shadow-lg transition-shadow duration-300">
+            <div className="mb-6">
+              <h2 className="text-xl font-bold text-gray-900 mb-2">
+                Cart Summary
+              </h2>
+              <div className="w-16 h-1 bg-[#166454]"></div>
+            </div>
 
             {/* Apply Coupon */}
-            <div className="mb-6">
-              <h3 className="text-sm font-medium mb-2">Have a coupon?</h3>
+            <div className="mb-6 p-4 bg-gradient-to-br from-gray-50 to-gray-100 rounded-lg border border-gray-200">
+              <h3 className="text-sm font-semibold mb-3 text-gray-900 flex items-center gap-2">
+                <svg
+                  className="w-4 h-4 text-[#166454]"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M12 8v13m0-13V6a2 2 0 112 2h-2zm0 0V5.5A2.5 2.5 0 109.5 8H12zm-7 4h14M5 12a2 2 0 110-4h14a2 2 0 110 4M5 12v7a2 2 0 002 2h10a2 2 0 002-2v-7"
+                  />
+                </svg>
+                Have a coupon?
+              </h3>
               {coupon ? (
-                <div className="flex justify-between items-center bg-green-50 p-3 rounded-md border border-green-200">
-                  <div>
-                    <span className="font-medium text-green-700">
-                      {coupon.code}
-                    </span>
-                    <p className="text-xs text-green-600 mt-1">
+                <div className="flex justify-between items-start bg-gradient-to-r from-green-50 to-emerald-50 p-4 rounded-lg border-2 border-green-200">
+                  <div className="flex-1">
+                    <div className="flex items-center gap-2 mb-2">
+                      <span className="font-bold text-green-700 text-base">
+                        {coupon.code}
+                      </span>
+                      <span className="text-xs bg-green-200 text-green-800 px-2 py-1 rounded-full font-semibold">
+                        Applied
+                      </span>
+                    </div>
+                    <p className="text-sm font-semibold text-green-700 mb-1">
                       {coupon.discountType === "PERCENTAGE"
                         ? `${coupon.discountValue}% off`
                         : `₹${coupon.discountValue} off`}
                     </p>
                     {coupon.applicableSubtotal && (
                       <p className="text-xs text-green-600 mt-1">
-                        Applies to {formatCurrency(coupon.applicableSubtotal)} worth of
-                        {" "}
-                        {coupon.matchedItems === 1 ? "eligible item" : "eligible items"}
+                        Applies to {formatCurrency(coupon.applicableSubtotal)}{" "}
+                        worth of{" "}
+                        {coupon.matchedItems === 1
+                          ? "eligible item"
+                          : "eligible items"}
                         {cart.items?.length
-                          ? ` (${coupon.matchedItems || 0} of ${cart.items.length})`
+                          ? ` (${coupon.matchedItems || 0} of ${cart.items.length
+                          })`
                           : ""}
                       </p>
                     )}
                     {((parseFloat(coupon.discountValue) > 90 &&
                       coupon.discountType === "PERCENTAGE") ||
                       coupon.isDiscountCapped) && (
-                        <p className="text-xs text-amber-600 mt-1">
+                        <p className="text-xs text-amber-700 mt-2 bg-amber-50 px-2 py-1 rounded">
                           *Maximum discount capped at 90%
                         </p>
                       )}
                   </div>
                   <button
                     onClick={handleRemoveCoupon}
-                    className="text-sm text-red-500 hover:text-red-700"
+                    className="text-sm text-red-600 hover:text-red-700 hover:bg-red-50 px-2 py-1 rounded transition-colors duration-200 ml-2"
                     disabled={couponLoading}
                   >
                     Remove
@@ -475,7 +551,7 @@ export default function CartPage() {
                 </div>
               ) : (
                 <>
-                  <form onSubmit={handleApplyCoupon} className="flex space-x-2">
+                  <form onSubmit={handleApplyCoupon} className="flex gap-2">
                     <Input
                       type="text"
                       placeholder="Enter coupon code"
@@ -483,15 +559,15 @@ export default function CartPage() {
                       onChange={(e) =>
                         setCouponCode(e.target.value.toUpperCase())
                       }
-                      className={`flex-1 ${couponError
+                      className={`flex-1 border-2 ${couponError
                         ? "border-red-300 focus-visible:ring-red-300"
-                        : ""
+                        : "border-gray-300 focus-visible:ring-[#166454]"
                         }`}
                     />
                     <Button
                       type="submit"
                       disabled={couponLoading}
-                      variant="outline"
+                      className="bg-[#166454] hover:bg-[#0d4a3d] text-white border-0"
                     >
                       {couponLoading ? (
                         <Loader2 className="h-4 w-4 animate-spin" />
@@ -500,11 +576,11 @@ export default function CartPage() {
                       )}
                     </Button>
                   </form>
-                  <p className="text-xs text-muted-foreground mt-1">
+                  <p className="text-xs text-gray-500 mt-2">
                     *Maximum discount limited to 90% of cart value
                   </p>
                   {couponError && (
-                    <div className="mt-2 flex items-start gap-1.5 text-red-600">
+                    <div className="mt-2 flex items-start gap-1.5 text-red-600 bg-red-50 p-2 rounded">
                       <AlertCircle className="h-4 w-4 mt-0.5 flex-shrink-0" />
                       <p className="text-xs">{couponError}</p>
                     </div>
@@ -514,47 +590,84 @@ export default function CartPage() {
             </div>
 
             {/* Price Details */}
-            <div className="border-t pt-4">
-              <div className="space-y-2 text-sm">
-                <div className="flex justify-between">
-                  <span className="text-gray-600">Subtotal</span>
-                  <span>{formatCurrency(totals.subtotal)}</span>
+            <div className="border-t-2 border-gray-200 pt-5">
+              <div className="space-y-3 text-sm">
+                <div className="flex justify-between items-center py-1">
+                  <span className="text-gray-600 font-medium">Subtotal</span>
+                  <span className="font-semibold text-gray-900">
+                    {formatCurrency(totals.subtotal)}
+                  </span>
                 </div>
 
                 {coupon && (
-                  <div className="flex justify-between text-green-600">
-                    <span>Discount</span>
-                    <span>-{formatCurrency(totals.discount)}</span>
+                  <div className="flex justify-between items-center bg-green-50 px-3 py-2 rounded">
+                    <span className="text-green-700 font-medium">Discount</span>
+                    <span className="text-green-700 font-bold">
+                      -{formatCurrency(totals.discount)}
+                    </span>
                   </div>
                 )}
 
-                <div className="flex justify-between">
-                  <span className="text-gray-600">Shipping</span>
-                  <span className="text-green-600 font-medium">FREE</span>
+                <div className="flex justify-between items-center py-1">
+                  <span className="text-gray-600 font-medium">Shipping</span>
+                  <span className="text-green-600 font-bold text-base flex items-center gap-1">
+                    <svg
+                      className="w-4 h-4"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M5 13l4 4L19 7"
+                      />
+                    </svg>
+                    FREE
+                  </span>
                 </div>
               </div>
 
-              <div className="flex justify-between font-bold text-lg mt-4 pt-4 border-t">
-                <span>Total</span>
-                <span>{formatCurrency(totals.subtotal - totals.discount)}</span>
+              <div className="flex justify-between items-center font-bold text-xl mt-5 pt-5 border-t-2 border-gray-300 bg-gradient-to-r from-gray-50 to-transparent px-3 py-3 rounded-lg">
+                <span className="text-gray-900">Total</span>
+                <span className="text-[#166454]">
+                  {formatCurrency(totals.subtotal - totals.discount)}
+                </span>
               </div>
             </div>
 
             {/* Checkout Button */}
             <Button
-              className="w-full mt-6 bg-[#166454] hover:bg-[#0d4a3d] text-white shadow-lg hover:shadow-xl transition-all duration-200"
+              className="w-full mt-6 bg-[#166454] hover:bg-[#0d4a3d] text-white shadow-lg hover:shadow-xl transition-all duration-200 transform hover:scale-[1.02] font-semibold py-6 text-base"
               size="lg"
               onClick={handleCheckout}
             >
-              <span className="flex items-center justify-center">
-                <ShoppingBag className="mr-2 h-4 w-4" />
-                Proceed to Checkout • {formatCurrency(totals.subtotal - totals.discount)}
+              <span className="flex items-center justify-center gap-2">
+                <ShoppingBag className="h-5 w-5" />
+                Proceed to Checkout
+                <span className="ml-2 font-bold">
+                  • {formatCurrency(totals.subtotal - totals.discount)}
+                </span>
               </span>
             </Button>
 
-            <p className="text-xs text-gray-500 mt-4 text-center">
-              Taxes and shipping calculated at checkout
-            </p>
+            <div className="mt-4 flex items-center justify-center gap-2 text-xs text-gray-500">
+              <svg
+                className="w-4 h-4"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
+                />
+              </svg>
+              <p>Taxes and shipping calculated at checkout</p>
+            </div>
           </div>
         </div>
       </div>

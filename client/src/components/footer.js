@@ -33,7 +33,7 @@ export function Footer() {
               {
                 icon: <CreditCard className="h-6 w-6" />,
                 title: "Easy Returns",
-                description: "30-day return policy",
+                description: "7-day return policy",
               },
               {
                 icon: <CheckCircle className="h-6 w-6" />,

@@ -145,11 +145,10 @@ const HeroCarousel = () => {
               <button
                 key={index}
                 onClick={() => api?.scrollTo(index)}
-                className={`w-2 h-2  rounded-full transition-all duration-300 ${
-                  index === currentSlide
-                    ? "bg-white scale-125 shadow-lg"
-                    : "bg-white/50 hover:bg-white/70"
-                }`}
+                className={`w-2 h-2  rounded-full transition-all duration-300 ${index === currentSlide
+                  ? "bg-white scale-125 shadow-lg"
+                  : "bg-white/50 hover:bg-white/70"
+                  }`}
                 aria-label={`Go to slide ${index + 1}`}
               />
             ))}
@@ -355,9 +354,9 @@ const TestimonialsSection = () => {
   }, [api]);
 
   return (
-    <section className="py-12 md:py-16 bg-gradient-to-b from-gray-50 to-white relative">
+    <section className="py-5 md:py-10  bg-gradient-to-b from-gray-50 to-white relative">
       <div className="container mx-auto px-4 relative z-10">
-        <div className="text-center mb-10 md:mb-12">
+        <div className="text-center mb-5 md:mb-12">
           <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-3">
             Customer Reviews
           </h2>
@@ -381,9 +380,8 @@ const TestimonialsSection = () => {
                   <div className="relative h-full min-h-[300px] rounded-2xl overflow-hidden shadow-xl group cursor-pointer bg-white border border-gray-100 hover:shadow-2xl transition-all duration-300 hover:-translate-y-2">
                     {/* Gradient Background */}
                     <div
-                      className={`absolute inset-0 bg-gradient-to-br ${
-                        gradientColors[index % gradientColors.length]
-                      } opacity-5 group-hover:opacity-10 transition-opacity duration-300`}
+                      className={`absolute inset-0 bg-gradient-to-br ${gradientColors[index % gradientColors.length]
+                        } opacity-5 group-hover:opacity-10 transition-opacity duration-300`}
                     ></div>
 
                     {/* Content */}
@@ -391,9 +389,8 @@ const TestimonialsSection = () => {
                       {/* Quote Icon */}
                       <div className="mb-4">
                         <svg
-                          className={`w-12 h-12 text-transparent bg-gradient-to-br ${
-                            gradientColors[index % gradientColors.length]
-                          } bg-clip-text`}
+                          className={`w-12 h-12 text-transparent bg-gradient-to-br ${gradientColors[index % gradientColors.length]
+                            } bg-clip-text`}
                           fill="currentColor"
                           viewBox="0 0 24 24"
                         >
@@ -419,9 +416,8 @@ const TestimonialsSection = () => {
                       {/* Customer Info */}
                       <div className="flex items-center gap-3 pt-4 border-t border-gray-200">
                         <div
-                          className={`w-12 h-12 md:w-14 md:h-14 rounded-full flex items-center justify-center bg-gradient-to-br ${
-                            gradientColors[index % gradientColors.length]
-                          } text-white font-bold text-lg md:text-xl shadow-lg`}
+                          className={`w-12 h-12 md:w-14 md:h-14 rounded-full flex items-center justify-center bg-gradient-to-br ${gradientColors[index % gradientColors.length]
+                            } text-white font-bold text-lg md:text-xl shadow-lg`}
                         >
                           {testimonial.name.charAt(0)}
                         </div>
@@ -449,11 +445,10 @@ const TestimonialsSection = () => {
               <button
                 key={index}
                 onClick={() => api?.scrollTo(index)}
-                className={`w-2 h-2 rounded-full transition-all duration-300 ${
-                  index === currentSlide
-                    ? "bg-[#136C5B] w-8"
-                    : "bg-gray-300 hover:bg-gray-400"
-                }`}
+                className={`w-2 h-2 rounded-full transition-all duration-300 ${index === currentSlide
+                  ? "bg-[#136C5B] w-8"
+                  : "bg-gray-300 hover:bg-gray-400"
+                  }`}
                 aria-label={`Go to slide ${index + 1}`}
               />
             ))}
@@ -684,18 +679,14 @@ export default function Home() {
   const [bestsellerProducts, setBestsellerProducts] = useState([]);
   const [trendingProducts, setTrendingProducts] = useState([]);
   const [newProducts, setNewProducts] = useState([]);
-  // Clothing Categories
-  const [mensProducts, setMensProducts] = useState([]);
-  const [womensProducts, setWomensProducts] = useState([]);
-  const [kidsProducts, setKidsProducts] = useState([]);
-  const [accessoriesProducts, setAccessoriesProducts] = useState([]);
-  const [footwearProducts, setFootwearProducts] = useState([]);
-  const [bagsProducts, setBagsProducts] = useState([]);
+  // Women's Clothing Categories
+  const [kurtisProducts, setKurtisProducts] = useState([]);
+  const [suitsProducts, setSuitsProducts] = useState([]);
+  const [sareesProducts, setSareesProducts] = useState([]);
+  const [westernProducts, setWesternProducts] = useState([]);
   // Special Collections
   const [saleProducts, setSaleProducts] = useState([]);
   const [premiumProducts, setPremiumProducts] = useState([]);
-  const [comboProducts, setComboProducts] = useState([]);
-  const [giftProducts, setGiftProducts] = useState([]);
   // Seasonal & Occasions
   const [summerProducts, setSummerProducts] = useState([]);
   const [winterProducts, setWinterProducts] = useState([]);
@@ -716,18 +707,14 @@ export default function Home() {
           bestsellerRes,
           trendingRes,
           newRes,
-          // Clothing Categories
-          mensRes,
-          womensRes,
-          kidsRes,
-          accessoriesRes,
-          footwearRes,
-          bagsRes,
+          // Women's Clothing Categories
+          kurtisRes,
+          suitsRes,
+          sareesRes,
+          westernRes,
           // Special Collections
           saleRes,
           premiumRes,
-          comboRes,
-          giftRes,
           // Seasonal & Occasions
           summerRes,
           winterRes,
@@ -739,18 +726,14 @@ export default function Home() {
           fetchProductsByType("bestseller", 8),
           fetchProductsByType("trending", 8),
           fetchProductsByType("new", 8),
-          // Clothing Categories
-          fetchProductsByType("mens", 8),
-          fetchProductsByType("womens", 8),
-          fetchProductsByType("kids", 8),
-          fetchProductsByType("accessories", 8),
-          fetchProductsByType("footwear", 8),
-          fetchProductsByType("bags", 8),
+          // Women's Clothing Categories
+          fetchProductsByType("kurtis", 8),
+          fetchProductsByType("suits", 8),
+          fetchProductsByType("sarees", 8),
+          fetchProductsByType("western", 8),
           // Special Collections
           fetchProductsByType("sale", 8),
           fetchProductsByType("premium", 8),
-          fetchProductsByType("combo", 8),
-          fetchProductsByType("gift", 8),
           // Seasonal & Occasions
           fetchProductsByType("summer", 8),
           fetchProductsByType("winter", 8),
@@ -785,29 +768,21 @@ export default function Home() {
           setNewProducts(newRes.value?.data?.products || []);
         }
 
-        // Clothing Categories
-        if (mensRes.status === "fulfilled") {
-          setMensProducts(mensRes.value?.data?.products || []);
+        // Women's Clothing Categories
+        if (kurtisRes.status === "fulfilled") {
+          setKurtisProducts(kurtisRes.value?.data?.products || []);
         }
 
-        if (womensRes.status === "fulfilled") {
-          setWomensProducts(womensRes.value?.data?.products || []);
+        if (suitsRes.status === "fulfilled") {
+          setSuitsProducts(suitsRes.value?.data?.products || []);
         }
 
-        if (kidsRes.status === "fulfilled") {
-          setKidsProducts(kidsRes.value?.data?.products || []);
+        if (sareesRes.status === "fulfilled") {
+          setSareesProducts(sareesRes.value?.data?.products || []);
         }
 
-        if (accessoriesRes.status === "fulfilled") {
-          setAccessoriesProducts(accessoriesRes.value?.data?.products || []);
-        }
-
-        if (footwearRes.status === "fulfilled") {
-          setFootwearProducts(footwearRes.value?.data?.products || []);
-        }
-
-        if (bagsRes.status === "fulfilled") {
-          setBagsProducts(bagsRes.value?.data?.products || []);
+        if (westernRes.status === "fulfilled") {
+          setWesternProducts(westernRes.value?.data?.products || []);
         }
 
         // Special Collections
@@ -817,14 +792,6 @@ export default function Home() {
 
         if (premiumRes.status === "fulfilled") {
           setPremiumProducts(premiumRes.value?.data?.products || []);
-        }
-
-        if (comboRes.status === "fulfilled") {
-          setComboProducts(comboRes.value?.data?.products || []);
-        }
-
-        if (giftRes.status === "fulfilled") {
-          setGiftProducts(giftRes.value?.data?.products || []);
         }
 
         // Seasonal & Occasions
@@ -871,9 +838,9 @@ export default function Home() {
 
       {/* FEATURED PRODUCTS */}
       {featuredProducts.length > 0 && (
-        <section className="py-12 md:py-16 bg-white">
+        <section className="py-5 md:py-10  bg-white">
           <div className="container mx-auto px-4">
-            <div className="text-center mb-10">
+            <div className="text-center mb-5">
               <h2 className="text-3xl md:text-4xl font-light tracking-wide mb-3 text-gray-900">
                 Featured Products
               </h2>
@@ -900,9 +867,9 @@ export default function Home() {
 
       {/* BEST SELLERS */}
       {bestsellerProducts.length > 0 && (
-        <section className="py-12 md:py-16 bg-gray-50">
+        <section className="py-5 md:py-10  bg-gray-50">
           <div className="container mx-auto px-4">
-            <div className="text-center mb-10">
+            <div className="text-center mb-5">
               <h2 className="text-3xl md:text-4xl font-light tracking-wide mb-3 text-gray-900">
                 Best Sellers
               </h2>
@@ -922,9 +889,9 @@ export default function Home() {
 
       {/* TRENDING */}
       {trendingProducts.length > 0 && (
-        <section className="py-12 md:py-16 bg-white">
+        <section className="py-5 md:py-10  bg-white">
           <div className="container mx-auto px-4">
-            <div className="text-center mb-10">
+            <div className="text-center mb-5">
               <h2 className="text-3xl md:text-4xl font-light tracking-wide mb-3 text-gray-900">
                 Trending Now
               </h2>
@@ -944,9 +911,9 @@ export default function Home() {
 
       {/* NEW ARRIVALS */}
       {newProducts.length > 0 && (
-        <section className="py-12 md:py-16 bg-gray-50">
+        <section className="py-5 md:py-10  bg-gray-50">
           <div className="container mx-auto px-4">
-            <div className="text-center mb-10">
+            <div className="text-center mb-5">
               <h2 className="text-3xl md:text-4xl font-light tracking-wide mb-3 text-gray-900">
                 New Arrivals
               </h2>
@@ -964,23 +931,23 @@ export default function Home() {
         </section>
       )}
 
-      {/* ========== CLOTHING SECTIONS START ========== */}
+      {/* ========== WOMEN'S CLOTHING SECTIONS START ========== */}
 
-      {/* MEN'S COLLECTION */}
-      {mensProducts.length > 0 && (
-        <section className="py-12 md:py-16 bg-white">
+      {/* KURTIS */}
+      {kurtisProducts.length > 0 && (
+        <section className="py-5 md:py-10  bg-white">
           <div className="container mx-auto px-4">
-            <div className="text-center mb-10">
+            <div className="text-center mb-5">
               <h2 className="text-3xl md:text-4xl font-light tracking-wide mb-3 text-gray-900">
-                Men&apos;s Collection
+                Kurtis
               </h2>
               <p className="text-gray-600 max-w-2xl mx-auto text-sm">
-                Stylish and comfortable clothing for men
+                Elegant and comfortable kurtis for every occasion
               </p>
             </div>
 
             <FeaturedProducts
-              products={mensProducts}
+              products={kurtisProducts}
               isLoading={productsLoading}
               error={error}
             />
@@ -988,21 +955,21 @@ export default function Home() {
         </section>
       )}
 
-      {/* WOMEN'S COLLECTION */}
-      {womensProducts.length > 0 && (
-        <section className="py-12 md:py-16 bg-gray-50">
+      {/* SUITS */}
+      {suitsProducts.length > 0 && (
+        <section className="py-5 md:py-10  bg-gray-50">
           <div className="container mx-auto px-4">
-            <div className="text-center mb-10">
+            <div className="text-center mb-5">
               <h2 className="text-3xl md:text-4xl font-light tracking-wide mb-3 text-gray-900">
-                Women&apos;s Collection
+                Suits
               </h2>
               <p className="text-gray-600 max-w-2xl mx-auto text-sm">
-                Trendy and elegant fashion for women
+                Stylish and trendy suit sets for women
               </p>
             </div>
 
             <FeaturedProducts
-              products={womensProducts}
+              products={suitsProducts}
               isLoading={productsLoading}
               error={error}
             />
@@ -1010,21 +977,21 @@ export default function Home() {
         </section>
       )}
 
-      {/* KIDS COLLECTION */}
-      {kidsProducts.length > 0 && (
-        <section className="py-12 md:py-16 bg-white">
+      {/* SAREES */}
+      {sareesProducts.length > 0 && (
+        <section className="py-5 md:py-10  bg-white">
           <div className="container mx-auto px-4">
-            <div className="text-center mb-10">
+            <div className="text-center mb-5">
               <h2 className="text-3xl md:text-4xl font-light tracking-wide mb-3 text-gray-900">
-                Kids Collection
+                Sarees
               </h2>
               <p className="text-gray-600 max-w-2xl mx-auto text-sm">
-                Fun and comfortable clothing for kids
+                Traditional and elegant sarees for special occasions
               </p>
             </div>
 
             <FeaturedProducts
-              products={kidsProducts}
+              products={sareesProducts}
               isLoading={productsLoading}
               error={error}
             />
@@ -1032,65 +999,21 @@ export default function Home() {
         </section>
       )}
 
-      {/* ACCESSORIES */}
-      {accessoriesProducts.length > 0 && (
-        <section className="py-12 md:py-16 bg-gray-50">
+      {/* WESTERN */}
+      {westernProducts.length > 0 && (
+        <section className="py-5 md:py-10  bg-gray-50">
           <div className="container mx-auto px-4">
-            <div className="text-center mb-10">
+            <div className="text-center mb-5">
               <h2 className="text-3xl md:text-4xl font-light tracking-wide mb-3 text-gray-900">
-                Accessories
+                Western
               </h2>
               <p className="text-gray-600 max-w-2xl mx-auto text-sm">
-                Complete your look with stylish accessories
+                Modern western wear for the contemporary woman
               </p>
             </div>
 
             <FeaturedProducts
-              products={accessoriesProducts}
-              isLoading={productsLoading}
-              error={error}
-            />
-          </div>
-        </section>
-      )}
-
-      {/* FOOTWEAR */}
-      {footwearProducts.length > 0 && (
-        <section className="py-12 md:py-16 bg-white">
-          <div className="container mx-auto px-4">
-            <div className="text-center mb-10">
-              <h2 className="text-3xl md:text-4xl font-light tracking-wide mb-3 text-gray-900">
-                Footwear
-              </h2>
-              <p className="text-gray-600 max-w-2xl mx-auto text-sm">
-                Comfortable and stylish shoes for every occasion
-              </p>
-            </div>
-
-            <FeaturedProducts
-              products={footwearProducts}
-              isLoading={productsLoading}
-              error={error}
-            />
-          </div>
-        </section>
-      )}
-
-      {/* BAGS & LUGGAGE */}
-      {bagsProducts.length > 0 && (
-        <section className="py-12 md:py-16 bg-gray-50">
-          <div className="container mx-auto px-4">
-            <div className="text-center mb-10">
-              <h2 className="text-3xl md:text-4xl font-light tracking-wide mb-3 text-gray-900">
-                Bags & Luggage
-              </h2>
-              <p className="text-gray-600 max-w-2xl mx-auto text-sm">
-                Functional and fashionable bags for every need
-              </p>
-            </div>
-
-            <FeaturedProducts
-              products={bagsProducts}
+              products={westernProducts}
               isLoading={productsLoading}
               error={error}
             />
@@ -1100,9 +1023,9 @@ export default function Home() {
 
       {/* SALE & OFFERS */}
       {saleProducts.length > 0 && (
-        <section className="py-12 md:py-16 bg-black text-white">
+        <section className="py-5 md:py-10  bg-black text-white">
           <div className="container mx-auto px-4">
-            <div className="text-center mb-10">
+            <div className="text-center mb-5">
               <h2 className="text-3xl md:text-4xl font-light tracking-wide mb-3 text-white">
                 Sale & Offers
               </h2>
@@ -1122,9 +1045,9 @@ export default function Home() {
 
       {/* PREMIUM COLLECTION */}
       {premiumProducts.length > 0 && (
-        <section className="py-12 md:py-16 bg-gray-50">
+        <section className="py-5 md:py-10  bg-gray-50">
           <div className="container mx-auto px-4">
-            <div className="text-center mb-10">
+            <div className="text-center mb-5">
               <h2 className="text-3xl md:text-4xl font-light tracking-wide mb-3 text-gray-900">
                 Premium Collection
               </h2>
@@ -1142,55 +1065,11 @@ export default function Home() {
         </section>
       )}
 
-      {/* COMBO PACKS */}
-      {comboProducts.length > 0 && (
-        <section className="py-12 md:py-16 bg-white">
-          <div className="container mx-auto px-4">
-            <div className="text-center mb-10">
-              <h2 className="text-3xl md:text-4xl font-light tracking-wide mb-3 text-gray-900">
-                Combo Packs
-              </h2>
-              <p className="text-gray-600 max-w-2xl mx-auto text-sm">
-                Best value bundles and combo offers
-              </p>
-            </div>
-
-            <FeaturedProducts
-              products={comboProducts}
-              isLoading={productsLoading}
-              error={error}
-            />
-          </div>
-        </section>
-      )}
-
-      {/* GIFT COLLECTION */}
-      {giftProducts.length > 0 && (
-        <section className="py-12 md:py-16 bg-gray-50">
-          <div className="container mx-auto px-4">
-            <div className="text-center mb-10">
-              <h2 className="text-3xl md:text-4xl font-light tracking-wide mb-3 text-gray-900">
-                Gift Collection
-              </h2>
-              <p className="text-gray-600 max-w-2xl mx-auto text-sm">
-                Perfect gifts for your loved ones
-              </p>
-            </div>
-
-            <FeaturedProducts
-              products={giftProducts}
-              isLoading={productsLoading}
-              error={error}
-            />
-          </div>
-        </section>
-      )}
-
       {/* SUMMER COLLECTION */}
       {summerProducts.length > 0 && (
-        <section className="py-12 md:py-16 bg-white">
+        <section className="py-5 md:py-10  bg-white">
           <div className="container mx-auto px-4">
-            <div className="text-center mb-10">
+            <div className="text-center mb-5">
               <h2 className="text-3xl md:text-4xl font-light tracking-wide mb-3 text-gray-900">
                 Summer Collection
               </h2>
@@ -1210,9 +1089,9 @@ export default function Home() {
 
       {/* WINTER COLLECTION */}
       {winterProducts.length > 0 && (
-        <section className="py-12 md:py-16 bg-gray-50">
+        <section className="py-5 md:py-10  bg-gray-50">
           <div className="container mx-auto px-4">
-            <div className="text-center mb-10">
+            <div className="text-center mb-5">
               <h2 className="text-3xl md:text-4xl font-light tracking-wide mb-3 text-gray-900">
                 Winter Collection
               </h2>
@@ -1232,9 +1111,9 @@ export default function Home() {
 
       {/* PARTY WEAR */}
       {partyProducts.length > 0 && (
-        <section className="py-12 md:py-16 bg-white">
+        <section className="py-5 md:py-10  bg-white">
           <div className="container mx-auto px-4">
-            <div className="text-center mb-10">
+            <div className="text-center mb-5">
               <h2 className="text-3xl md:text-4xl font-light tracking-wide mb-3 text-gray-900">
                 Party Wear
               </h2>
@@ -1254,9 +1133,9 @@ export default function Home() {
 
       {/* CASUAL WEAR */}
       {casualProducts.length > 0 && (
-        <section className="py-12 md:py-16 bg-gray-50">
+        <section className="py-5 md:py-10  bg-gray-50">
           <div className="container mx-auto px-4">
-            <div className="text-center mb-10">
+            <div className="text-center mb-5">
               <h2 className="text-3xl md:text-4xl font-light tracking-wide mb-3 text-gray-900">
                 Casual Wear
               </h2>
@@ -1276,9 +1155,9 @@ export default function Home() {
 
       {/* FORMAL WEAR */}
       {formalProducts.length > 0 && (
-        <section className="py-12 md:py-16 bg-white">
+        <section className="py-5 md:py-10  bg-white">
           <div className="container mx-auto px-4">
-            <div className="text-center mb-10">
+            <div className="text-center mb-5">
               <h2 className="text-3xl md:text-4xl font-light tracking-wide mb-3 text-gray-900">
                 Formal Wear
               </h2>

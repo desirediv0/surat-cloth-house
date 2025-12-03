@@ -579,30 +579,6 @@ export function Navbar() {
               </button>
             </form>
 
-            {/* Quick Search Tags */}
-            <div className="mt-4">
-              <p className="text-xs text-gray-500 mb-2 uppercase tracking-wide">
-                Popular Searches
-              </p>
-              <div className="flex flex-wrap gap-2">
-                {["Kurtis", "Sarees", "Suits", "Western", "Dresses"].map(
-                  (term) => (
-                    <button
-                      key={term}
-                      type="button"
-                      onClick={() => {
-                        setSearchQuery(term);
-                        router.push(`/products?search=${term}`);
-                        setIsSearchOpen(false);
-                      }}
-                      className="px-3 py-1.5 text-sm bg-gray-100 text-gray-700 rounded-full hover:bg-[#136C5B] hover:text-white transition-colors"
-                    >
-                      {term}
-                    </button>
-                  )
-                )}
-              </div>
-            </div>
           </div>
         </div>
       )}

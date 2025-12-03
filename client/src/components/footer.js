@@ -16,9 +16,9 @@ export function Footer() {
   return (
     <footer>
       {/* Top Feature Section - Modern minimal style */}
-      <div className="bg-gray-50 py-12 border-t border-gray-100">
+      <div className="bg-gray-50 py-8 md:py-12 border-t border-gray-100">
         <div className="container mx-auto px-4">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+          <div className="grid  grid-cols-2 lg:grid-cols-4 gap-4 md:gap-8">
             {[
               {
                 icon: <Truck className="h-6 w-6" />,
@@ -43,14 +43,14 @@ export function Footer() {
             ].map((feature, index) => (
               <div
                 key={index}
-                className="flex flex-col items-center text-center space-y-3"
+                className="flex flex-col items-center text-center space-y-2 md:space-y-3"
               >
                 <div className="text-[#166454]">{feature.icon}</div>
                 <div>
-                  <h3 className="font-semibold text-base text-gray-900 mb-1">
+                  <h3 className="font-semibold text-sm md:text-base text-gray-900 mb-1">
                     {feature.title}
                   </h3>
-                  <p className="text-gray-600 text-sm">{feature.description}</p>
+                  <p className="text-gray-600 text-xs md:text-sm">{feature.description}</p>
                 </div>
               </div>
             ))}

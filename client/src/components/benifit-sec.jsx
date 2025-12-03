@@ -95,7 +95,7 @@ const BenefitsSec = () => {
           </motion.div>
 
           {/* Right side - Benefits grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 bg-white">
+          <div className="grid grid-cols-2 bg-white">
             {benefits.map((benefit, index) => {
               const IconComponent = benefit.icon;
               return (
@@ -105,7 +105,7 @@ const BenefitsSec = () => {
                   whileInView={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.5, delay: index * 0.1 }}
                   viewport={{ once: true }}
-                  className="p-6 md:p-8 lg:p-10 bg-white border-r border-b border-gray-200 hover:bg-gray-50 transition-colors duration-300 group"
+                  className="p-4 md:p-6 lg:p-10 bg-white border-r border-b border-gray-200 hover:bg-gray-50 transition-colors duration-300 group"
                 >
                   <div className="flex flex-col h-full">
                     <div className="mb-4">
@@ -115,15 +115,15 @@ const BenefitsSec = () => {
                         transition={{ type: "spring", stiffness: 400 }}
                       >
                         <IconComponent
-                          className="w-8 h-8 md:w-10 md:h-10"
+                          className="w-6 h-6 md:w-8 md:h-8 lg:w-10 lg:h-10"
                           strokeWidth={1.5}
                         />
                       </motion.div>
                     </div>
-                    <h3 className="text-lg md:text-xl font-bold mb-3 text-gray-900 group-hover:text-[#136C5B] transition-colors">
+                    <h3 className="text-base md:text-lg lg:text-xl font-bold mb-3 text-gray-900 group-hover:text-[#136C5B] transition-colors">
                       {benefit.title}
                     </h3>
-                    <p className="text-gray-600 text-sm md:text-base leading-relaxed flex-grow">
+                    <p className="text-gray-600 text-xs md:text-sm lg:text-base leading-relaxed flex-grow">
                       {benefit.description}
                     </p>
                   </div>

@@ -534,7 +534,7 @@ function ProductsContent() {
     <div id="products-main">
       <div>
         {/* Categories Carousel - Desktop */}
-        <div className="hidden md:flex mx-auto max-w-7xl">
+        <div className="hidden lg:flex mx-auto max-w-7xl">
           <CategoriesCarousel />
         </div>
 
@@ -574,8 +574,8 @@ function ProductsContent() {
           {/* Filters Sidebar */}
           <div
             className={`md:w-1/4 lg:w-1/5 ${mobileFiltersOpen
-                ? "block fixed inset-0 z-50 bg-white p-4 overflow-auto"
-                : "hidden"
+              ? "block fixed inset-0 z-50 bg-white p-4 overflow-auto"
+              : "hidden"
               } md:block md:static md:z-auto md:bg-transparent md:p-0`}
           >
             <div className="bg-white rounded-lg shadow-sm border sticky top-28">
@@ -612,8 +612,8 @@ function ProductsContent() {
                 </div>
                 <div
                   className={`overflow-hidden transition-all duration-300 ease-in-out ${activeFilterSection === "search"
-                      ? "max-h-[500px] opacity-100"
-                      : "max-h-0 opacity-0"
+                    ? "max-h-[500px] opacity-100"
+                    : "max-h-0 opacity-0"
                     }`}
                 >
                   <form
@@ -655,8 +655,8 @@ function ProductsContent() {
                 </div>
                 <div
                   className={`overflow-hidden transition-all duration-300 ease-in-out ${activeFilterSection === "categories"
-                      ? "max-h-[500px] opacity-100"
-                      : "max-h-0 opacity-0"
+                    ? "max-h-[500px] opacity-100"
+                    : "max-h-0 opacity-0"
                     }`}
                 >
                   <div className="space-y-2 max-h-60 overflow-y-auto">
@@ -664,8 +664,8 @@ function ProductsContent() {
                       <div key={category.id} className="ml-2">
                         <div
                           className={`cursor-pointer hover:text-[#136C5B] flex items-center ${filters.category === category.slug
-                              ? "font-medium text-[#136C5B]"
-                              : ""
+                            ? "font-medium text-[#136C5B]"
+                            : ""
                             }`}
                           onClick={() =>
                             handleFilterChange("category", category.slug)
@@ -680,8 +680,8 @@ function ProductsContent() {
                               <div
                                 key={child.id}
                                 className={`cursor-pointer hover:text-[#136C5B] text-sm ${filters.category === child.slug
-                                    ? "font-medium text-[#136C5B]"
-                                    : ""
+                                  ? "font-medium text-[#136C5B]"
+                                  : ""
                                   }`}
                                 onClick={() =>
                                   handleFilterChange("category", child.slug)
@@ -713,8 +713,8 @@ function ProductsContent() {
                 </div>
                 <div
                   className={`overflow-hidden transition-all duration-300 ease-in-out ${activeFilterSection === "colors"
-                      ? "max-h-[500px] opacity-100"
-                      : "max-h-0 opacity-0"
+                    ? "max-h-[500px] opacity-100"
+                    : "max-h-0 opacity-0"
                     }`}
                 >
                   <div className="space-y-2 max-h-60 overflow-y-auto">
@@ -722,8 +722,8 @@ function ProductsContent() {
                       <div
                         key={color.id}
                         className={`cursor-pointer hover:text-[#136C5B] ml-2 flex items-center ${selectedColors.includes(color.id)
-                            ? "font-medium text-[#136C5B]"
-                            : ""
+                          ? "font-medium text-[#136C5B]"
+                          : ""
                           }`}
                         onClick={() => handleColorChange(color.id)}
                       >
@@ -770,8 +770,8 @@ function ProductsContent() {
                 </div>
                 <div
                   className={`overflow-hidden transition-all duration-300 ease-in-out ${activeFilterSection === "sizes"
-                      ? "max-h-[500px] opacity-100"
-                      : "max-h-0 opacity-0"
+                    ? "max-h-[500px] opacity-100"
+                    : "max-h-0 opacity-0"
                     }`}
                 >
                   <div className="space-y-2 max-h-60 overflow-y-auto">
@@ -779,8 +779,8 @@ function ProductsContent() {
                       <div
                         key={size.id}
                         className={`cursor-pointer hover:text-[#136C5B] ml-2 flex items-center ${selectedSizes.includes(size.id)
-                            ? "font-medium text-[#136C5B]"
-                            : ""
+                          ? "font-medium text-[#136C5B]"
+                          : ""
                           }`}
                         onClick={() => handleSizeChange(size.id)}
                       >
@@ -1085,8 +1085,8 @@ function ProductsContent() {
                           onClick={() => handlePageChange(page)}
                           disabled={loading}
                           className={`px-3 py-2 text-sm ${pagination.page === page
-                              ? "bg-[#136C5B] text-white"
-                              : "hover:bg-gray-100"
+                            ? "bg-[#136C5B] text-white"
+                            : "hover:bg-gray-100"
                             }`}
                         >
                           {page}

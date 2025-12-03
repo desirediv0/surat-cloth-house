@@ -13,7 +13,6 @@ import {
   AlertCircle,
   ChevronLeft,
   ChevronRight,
-  X,
 } from "lucide-react";
 import { useAddVariantToCart } from "@/lib/cart-utils";
 
@@ -311,14 +310,6 @@ export default function ProductQuickView({ product, open, onOpenChange }) {
       .filter((id, index, self) => self.indexOf(id) === index); // Remove duplicates
   };
 
-  // Get all available sizes (when no colors)
-  const getAllAvailableSizes = () => {
-    return availableCombinations
-      .filter((combo) => combo.sizeId)
-      .map((combo) => combo.sizeId)
-      .filter((id, index, self) => self.indexOf(id) === index);
-  };
-
   // Handle color change
   const handleColorChange = (color) => {
     setSelectedColor(color);
@@ -398,18 +389,6 @@ export default function ProductQuickView({ product, open, onOpenChange }) {
     }
   };
 
-  // Handle quantity change
-  const handleQuantityChange = (change) => {
-    const newQuantity = quantity + change;
-    if (newQuantity < 1) return;
-    if (
-      selectedVariant &&
-      selectedVariant.quantity > 0 &&
-      newQuantity > selectedVariant.quantity
-    )
-      return;
-    setQuantity(newQuantity);
-  };
 
   // Handle add to cart
   const handleAddToCart = async () => {
@@ -451,136 +430,87 @@ export default function ProductQuickView({ product, open, onOpenChange }) {
     }
   };
 
-  // Get the appropriate image to display
-  const getDisplayImage = () => {
-    const displayProduct = productDetails || product;
 
-    if (selectedVariant?.images?.length > 0) {
-      const primaryImage = selectedVariant.images.find((img) => img.isPrimary);
-      const imageUrl = primaryImage
-        ? primaryImage.url
-        : selectedVariant.images[0]?.url;
-      return getImageUrl(imageUrl);
-    }
-
-    if (displayProduct?.images?.length > 0) {
-      const primaryImage = displayProduct.images.find((img) => img.isPrimary);
-      const imageUrl = primaryImage
-        ? primaryImage.url
-        : displayProduct.images[0]?.url;
-      return getImageUrl(imageUrl);
-    }
-
-    if (displayProduct?.variants?.length > 0) {
-      const variantWithImages = displayProduct.variants.find(
-        (variant) => variant.images && variant.images.length > 0
-      );
-      if (variantWithImages) {
-        const primaryImage = variantWithImages.images.find(
-          (img) => img.isPrimary
-        );
-        const imageUrl = primaryImage
-          ? primaryImage.url
-          : variantWithImages.images[0]?.url;
-        return getImageUrl(imageUrl);
-      }
-    }
-
-    if (displayProduct?.image) {
-      return getImageUrl(displayProduct.image);
-    }
-
-    return imgSrc || "/placeholder.jpg";
+  // Helper to parse price (handle Decimal types from API)
+  const parsePrice = (price) => {
+    if (!price) return 0;
+    if (typeof price === "number") return price;
+    if (typeof price === "string") return parseFloat(price) || 0;
+    return 0;
   };
 
-  // Format price display - handle API data types properly
-  const getPriceDisplay = () => {
+  // Get price data - single source of truth
+  const getPriceData = () => {
     if (initialLoading || loading) {
-      return <div className="h-8 w-32 bg-gray-200 animate-pulse rounded"></div>;
+      return { loading: true };
     }
 
-    // Helper to parse price (handle Decimal types from API)
-    const parsePrice = (price) => {
-      if (!price) return 0;
-      if (typeof price === "number") return price;
-      if (typeof price === "string") return parseFloat(price) || 0;
-      return 0;
-    };
-
+    // Priority 1: Selected variant
     if (selectedVariant) {
       const salePrice = parsePrice(selectedVariant.salePrice);
       const price = parsePrice(selectedVariant.price);
-
-      if (salePrice && salePrice > 0 && salePrice < price) {
-        return (
-          <div className="flex items-baseline gap-2">
-            <span className="text-2xl font-bold text-[#136C5B]">
-              {formatCurrency(salePrice)}
-            </span>
-            <span className="text-lg text-gray-500 line-through">
-              {formatCurrency(price)}
-            </span>
-          </div>
-        );
-      }
-      return (
-        <span className="text-2xl font-bold text-[#136C5B]">
-          {formatCurrency(price || 0)}
-        </span>
-      );
+      return {
+        currentPrice: salePrice > 0 && salePrice < price ? salePrice : price,
+        originalPrice: salePrice > 0 && salePrice < price ? price : null,
+        loading: false,
+      };
     }
 
+    // Priority 2: Product details from API
     if (productDetails) {
       const basePrice = parsePrice(productDetails.basePrice);
       const regularPrice = parsePrice(productDetails.regularPrice);
       const hasSale =
         productDetails.hasSale && basePrice > 0 && regularPrice > basePrice;
-
-      if (hasSale) {
-        return (
-          <div className="flex items-baseline gap-2">
-            <span className="text-2xl font-bold text-[#136C5B]">
-              {formatCurrency(basePrice)}
-            </span>
-            <span className="text-lg text-gray-500 line-through">
-              {formatCurrency(regularPrice)}
-            </span>
-          </div>
-        );
-      }
-      return (
-        <span className="text-2xl font-bold text-[#136C5B]">
-          {formatCurrency(basePrice || 0)}
-        </span>
-      );
+      return {
+        currentPrice: basePrice,
+        originalPrice: hasSale ? regularPrice : null,
+        loading: false,
+      };
     }
 
+    // Priority 3: Fallback to product prop
     if (product) {
       const basePrice = parsePrice(product.basePrice);
       const regularPrice = parsePrice(product.regularPrice);
       const hasSale =
         product.hasSale && basePrice > 0 && regularPrice > basePrice;
+      return {
+        currentPrice: basePrice,
+        originalPrice: hasSale ? regularPrice : null,
+        loading: false,
+      };
+    }
 
-      if (hasSale) {
-        return (
-          <div className="flex items-baseline gap-2">
-            <span className="text-2xl font-bold text-[#136C5B]">
-              {formatCurrency(basePrice)}
-            </span>
-            <span className="text-lg text-gray-500 line-through">
-              {formatCurrency(regularPrice)}
-            </span>
-          </div>
-        );
-      }
+    return { loading: false, currentPrice: 0, originalPrice: null };
+  };
+
+  // Format price display - single display
+  const getPriceDisplay = () => {
+    const priceData = getPriceData();
+
+    if (priceData.loading) {
+      return <div className="h-8 w-32 bg-gray-200 animate-pulse rounded"></div>;
+    }
+
+    if (priceData.originalPrice && priceData.originalPrice > priceData.currentPrice) {
       return (
-        <span className="text-2xl font-bold text-[#136C5B]">
-          {formatCurrency(basePrice || 0)}
-        </span>
+        <div className="flex items-baseline gap-2 flex-wrap">
+          <span className="text-2xl font-bold text-[#136C5B]">
+            {formatCurrency(priceData.currentPrice)}
+          </span>
+          <span className="text-lg text-gray-500 line-through">
+            {formatCurrency(priceData.originalPrice)}
+          </span>
+        </div>
       );
     }
 
-    return null;
+    return (
+      <span className="text-2xl font-bold text-[#136C5B]">
+        {formatCurrency(priceData.currentPrice || 0)}
+      </span>
+    );
   };
 
   // Get all product images - using useMemo to avoid recalculating
@@ -663,67 +593,27 @@ export default function ProductQuickView({ product, open, onOpenChange }) {
 
   const displayProduct = productDetails || product;
 
-  // Calculate discount percentage - handle API data types
+  // Calculate discount percentage - using single source of truth
   const getDiscountPercentage = () => {
-    const parsePrice = (price) => {
-      if (!price) return 0;
-      if (typeof price === "number") return price;
-      if (typeof price === "string") return parseFloat(price) || 0;
-      return 0;
-    };
+    const priceData = getPriceData();
 
-    if (selectedVariant) {
-      const price = parsePrice(selectedVariant.price);
-      const salePrice = parsePrice(selectedVariant.salePrice);
-
-      if (salePrice > 0 && price > salePrice) {
-        return Math.round(((price - salePrice) / price) * 100);
-      }
+    if (priceData.loading || !priceData.originalPrice || !priceData.currentPrice) {
+      return null;
     }
 
-    if (productDetails) {
-      const regularPrice = parsePrice(productDetails.regularPrice);
-      const basePrice = parsePrice(productDetails.basePrice);
-
-      if (
-        productDetails.hasSale &&
-        regularPrice > 0 &&
-        basePrice > 0 &&
-        regularPrice > basePrice
-      ) {
-        return Math.round(((regularPrice - basePrice) / regularPrice) * 100);
-      }
-    }
-
-    if (product) {
-      const regularPrice = parsePrice(product.regularPrice);
-      const basePrice = parsePrice(product.basePrice);
-
-      if (
-        product.hasSale &&
-        regularPrice > 0 &&
-        basePrice > 0 &&
-        regularPrice > basePrice
-      ) {
-        return Math.round(((regularPrice - basePrice) / regularPrice) * 100);
-      }
+    if (priceData.originalPrice > priceData.currentPrice) {
+      return Math.round(((priceData.originalPrice - priceData.currentPrice) / priceData.originalPrice) * 100);
     }
 
     return null;
   };
 
   const discountPercentage = getDiscountPercentage();
+  const priceData = getPriceData();
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-6xl max-w-[95vw] max-h-[95vh] overflow-hidden p-0 gap-0">
-        {/* Close Button */}
-        <button
-          onClick={() => onOpenChange(false)}
-          className="absolute top-4 right-4 z-50 w-10 h-10 rounded-full bg-white/90 hover:bg-white border border-gray-200 flex items-center justify-center shadow-lg transition-colors"
-        >
-          <X className="h-5 w-5 text-gray-700" />
-        </button>
 
         {loading && !productDetails ? (
           <div className="py-20 flex justify-center">
@@ -740,11 +630,10 @@ export default function ProductQuickView({ product, open, onOpenChange }) {
                     <button
                       key={idx}
                       onClick={() => setCurrentImageIndex(idx)}
-                      className={`relative w-16 h-16 rounded-md overflow-hidden border-2 transition-all ${
-                        currentImageIndex === idx
-                          ? "border-[#136C5B] shadow-md"
-                          : "border-gray-200 hover:border-gray-300"
-                      }`}
+                      className={`relative w-16 h-16 rounded-md overflow-hidden border-2 transition-all ${currentImageIndex === idx
+                        ? "border-[#136C5B] shadow-md"
+                        : "border-gray-200 hover:border-gray-300"
+                        }`}
                     >
                       <Image
                         src={img}
@@ -831,32 +720,15 @@ export default function ProductQuickView({ product, open, onOpenChange }) {
 
               {/* Price Section */}
               <div className="mb-6">
-                <div className="flex items-baseline gap-3 mb-2">
+                <div className="flex items-baseline gap-3 mb-2 flex-wrap">
                   {getPriceDisplay()}
-                  {discountPercentage && (
+                  {discountPercentage && discountPercentage > 0 && (
                     <span className="bg-red-500 text-white text-xs font-bold px-3 py-1 rounded-full">
                       {discountPercentage}% OFF
                     </span>
                   )}
                 </div>
-                {selectedVariant &&
-                  selectedVariant.price &&
-                  selectedVariant.salePrice && (
-                    <p className="text-sm text-gray-500">
-                      MRP{" "}
-                      <span className="line-through">
-                        {formatCurrency(selectedVariant.price)}
-                      </span>
-                    </p>
-                  )}
-                {productDetails?.regularPrice && productDetails?.basePrice && (
-                  <p className="text-sm text-gray-500">
-                    MRP{" "}
-                    <span className="line-through">
-                      {formatCurrency(productDetails.regularPrice)}
-                    </span>
-                  </p>
-                )}
+
                 <p className="text-xs text-gray-500 mt-1">
                   Inclusive of all taxes
                 </p>
@@ -869,11 +741,10 @@ export default function ProductQuickView({ product, open, onOpenChange }) {
                     {[1, 2, 3, 4, 5].map((star) => (
                       <Star
                         key={star}
-                        className={`h-4 w-4 ${
-                          star <= Math.round(displayProduct.avgRating || 0)
-                            ? "text-yellow-400 fill-yellow-400"
-                            : "text-gray-300"
-                        }`}
+                        className={`h-4 w-4 ${star <= Math.round(displayProduct.avgRating || 0)
+                          ? "text-yellow-400 fill-yellow-400"
+                          : "text-gray-300"
+                          }`}
                       />
                     ))}
                   </div>
@@ -909,26 +780,23 @@ export default function ProductQuickView({ product, open, onOpenChange }) {
                             type="button"
                             onClick={() => handleColorChange(color)}
                             disabled={!isAvailable}
-                            className={`flex flex-col items-center gap-2 transition-all ${
-                              !isAvailable
-                                ? "opacity-50 cursor-not-allowed"
-                                : "cursor-pointer"
-                            }`}
+                            className={`flex flex-col items-center gap-2 transition-all ${!isAvailable
+                              ? "opacity-50 cursor-not-allowed"
+                              : "cursor-pointer"
+                              }`}
                           >
                             <div
-                              className={`w-12 h-12 rounded-full border-2 transition-all ${
-                                isSelected
-                                  ? "border-[#136C5B] shadow-lg scale-110"
-                                  : "border-gray-300 hover:border-gray-400"
-                              }`}
+                              className={`w-12 h-12 rounded-full border-2 transition-all ${isSelected
+                                ? "border-[#136C5B] shadow-lg scale-110"
+                                : "border-gray-300 hover:border-gray-400"
+                                }`}
                               style={{
                                 backgroundColor: color.hexCode || "#ccc",
                               }}
                             />
                             <span
-                              className={`text-xs font-medium ${
-                                isSelected ? "text-[#136C5B]" : "text-gray-700"
-                              }`}
+                              className={`text-xs font-medium ${isSelected ? "text-[#136C5B]" : "text-gray-700"
+                                }`}
                             >
                               {color.name}
                             </span>
@@ -953,13 +821,13 @@ export default function ProductQuickView({ product, open, onOpenChange }) {
                         // If no colors, check if size exists in any variant
                         const isAvailable = selectedColor
                           ? availableCombinations.some(
-                              (combo) =>
-                                combo.colorId === selectedColor.id &&
-                                combo.sizeId === size.id
-                            )
+                            (combo) =>
+                              combo.colorId === selectedColor.id &&
+                              combo.sizeId === size.id
+                          )
                           : availableCombinations.some(
-                              (combo) => combo.sizeId === size.id
-                            );
+                            (combo) => combo.sizeId === size.id
+                          );
                         const isSelected = selectedSize?.id === size.id;
 
                         return (
@@ -968,13 +836,12 @@ export default function ProductQuickView({ product, open, onOpenChange }) {
                             type="button"
                             onClick={() => handleSizeChange(size)}
                             disabled={!isAvailable}
-                            className={`w-12 h-12 rounded-full border-2 text-sm font-semibold transition-all ${
-                              isSelected
-                                ? "border-[#136C5B] bg-[#136C5B] text-white shadow-md"
-                                : isAvailable
+                            className={`w-12 h-12 rounded-full border-2 text-sm font-semibold transition-all ${isSelected
+                              ? "border-[#136C5B] bg-[#136C5B] text-white shadow-md"
+                              : isAvailable
                                 ? "border-gray-300 text-gray-700 hover:border-gray-400 bg-white"
                                 : "border-gray-200 text-gray-400 bg-gray-50 cursor-not-allowed"
-                            }`}
+                              }`}
                           >
                             {size.display || size.name}
                           </button>
@@ -988,11 +855,10 @@ export default function ProductQuickView({ product, open, onOpenChange }) {
               {selectedVariant && (
                 <div className="mb-4">
                   <span
-                    className={`text-sm font-medium ${
-                      selectedVariant.quantity > 0
-                        ? "text-green-600"
-                        : "text-red-600"
-                    }`}
+                    className={`text-sm font-medium ${selectedVariant.quantity > 0
+                      ? "text-green-600"
+                      : "text-red-600"
+                      }`}
                   >
                     {selectedVariant.quantity > 0
                       ? `✓ In Stock (${selectedVariant.quantity} available)`

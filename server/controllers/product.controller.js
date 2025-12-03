@@ -419,6 +419,19 @@ export const getProductBySlug = asyncHandler(async (req, res) => {
     metaTitle: product.metaTitle || product.name,
     metaDescription: product.metaDescription || product.description,
     keywords: product.keywords || "",
+    // Add price fields for fallback when no variant is selected
+    basePrice:
+      product.variants.length > 0
+        ? parseFloat(
+            product.variants[0].salePrice || product.variants[0].price || 0
+          )
+        : 0,
+    hasSale:
+      product.variants.length > 0 && product.variants[0].salePrice !== null,
+    regularPrice:
+      product.variants.length > 0
+        ? parseFloat(product.variants[0].price || 0)
+        : 0,
   };
 
   // Add related products

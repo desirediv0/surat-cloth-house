@@ -9,8 +9,6 @@ import Link from "next/link";
 import { useAuth } from "@/lib/auth-context";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
-
-import { useAddProductToCart } from "@/lib/cart-utils";
 import ProductQuickView from "./ProductQuickView";
 
 // Helper function to format image URLs correctly
@@ -31,12 +29,10 @@ const ProductCard = ({ product }) => {
   const [quickViewProduct, setQuickViewProduct] = useState(null);
   const [wishlistItems, setWishlistItems] = useState({});
   const [isAddingToWishlist, setIsAddingToWishlist] = useState({});
-  const [isAddingToCart, setIsAddingToCart] = useState({});
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [isHovered, setIsHovered] = useState(false);
   const { isAuthenticated } = useAuth();
   const router = useRouter();
-  const { addProductToCart } = useAddProductToCart();
 
   // Fetch wishlist status for this product
   useEffect(() => {
@@ -64,22 +60,6 @@ const ProductCard = ({ product }) => {
   const handleQuickView = (product) => {
     setQuickViewProduct(product);
     setQuickViewOpen(true);
-  };
-
-  // Handle add to cart click
-  const handleAddToCart = async (product) => {
-    setIsAddingToCart((prev) => ({ ...prev, [product.id]: true }));
-    try {
-      const result = await addProductToCart(product, 1);
-      if (!result.success) {
-        return;
-      }
-    } catch (err) {
-      console.error("Error adding to cart:", err);
-      toast.error("Failed to add product to cart");
-    } finally {
-      setIsAddingToCart((prev) => ({ ...prev, [product.id]: false }));
-    }
   };
 
   const handleAddToWishlist = async (product, e) => {
@@ -130,11 +110,9 @@ const ProductCard = ({ product }) => {
     }
   };
 
-
   const getAllProductImages = useMemo(() => {
     const images = [];
     const imageUrls = new Set();
-
 
     if (
       product.variants &&
@@ -197,12 +175,6 @@ const ProductCard = ({ product }) => {
     return images;
   }, [product]);
 
-  // Get current image to display
-  const getCurrentImage = () => {
-    if (getAllProductImages.length === 0) return "/placeholder.jpg";
-    return getAllProductImages[currentImageIndex] || getAllProductImages[0];
-  };
-
   // Auto-rotate images on hover
   useEffect(() => {
     if (!isHovered || getAllProductImages.length <= 1) {
@@ -248,7 +220,7 @@ const ProductCard = ({ product }) => {
   return (
     <div
       key={product.id}
-      className="bg-white overflow-hidden transition-all duration-300 hover:shadow-xl border border-gray-100 rounded-none group"
+      className="bg-white overflow-hidden transition-all duration-300 hover:shadow-xl border border-gray-200 rounded-none group"
     >
       <Link href={`/products/${product.slug}`}>
         <div
@@ -263,41 +235,27 @@ const ProductCard = ({ product }) => {
                 src={img}
                 alt={`${product.name} - Image ${idx + 1}`}
                 fill
-                className={`object-cover transition-all duration-500 ${idx === currentImageIndex
-                  ? "opacity-100 scale-100 group-hover:scale-105"
-                  : "opacity-0 scale-95 absolute"
-                  }`}
+                className={`object-cover transition-all duration-500 ${
+                  idx === currentImageIndex
+                    ? "opacity-100 scale-100 group-hover:scale-105"
+                    : "opacity-0 scale-95 absolute"
+                }`}
                 sizes="(max-width: 768px) 50vw, (max-width: 1200px) 33vw, 25vw"
               />
             ))}
           </div>
 
-          {/* Image indicators - show on hover if multiple images */}
-          {isHovered && getAllProductImages.length > 1 && (
-            <div className="absolute bottom-3 left-1/2 -translate-x-1/2 z-20 flex gap-1.5">
-              {getAllProductImages.map((_, idx) => (
-                <div
-                  key={idx}
-                  className={`h-1.5 rounded-full transition-all duration-300 ${idx === currentImageIndex
-                    ? "bg-[#136C5B] w-6"
-                    : "bg-white/50 w-1.5"
-                    }`}
-                />
-              ))}
-            </div>
-          )}
-
           {/* Sale and Discount badges - always visible, enhanced on hover */}
           {product.hasSale && (
             <>
-              <div className="absolute top-3 left-3 z-10">
-                <div className="bg-red-500 text-white text-[10px] md:text-xs font-bold px-2.5 md:px-3 py-1 uppercase tracking-wide shadow-lg transition-transform duration-300 group-hover:scale-110">
+              <div className="absolute top-2 left-2 md:top-3 md:left-3 z-10">
+                <div className="bg-red-500 text-white text-[10px] md:text-xs font-bold px-2 md:px-2.5 py-0.5 md:py-1 uppercase tracking-wide shadow-md md:shadow-lg transition-transform duration-300 group-hover:scale-110">
                   Sale
                 </div>
               </div>
               {discountPercent > 0 && (
-                <div className="absolute top-3 right-3 z-10">
-                  <div className="bg-pink-500 text-white text-[10px] md:text-xs font-bold px-2.5 md:px-3 py-1 rounded-full shadow-lg transition-transform duration-300 group-hover:scale-110">
+                <div className="absolute top-2 right-2 md:top-3 md:right-3 z-10">
+                  <div className="bg-pink-500 text-white text-[10px] md:text-xs font-bold px-2 md:px-2.5 py-0.5 md:py-1 rounded-full shadow-md md:shadow-lg transition-transform duration-300 group-hover:scale-110">
                     {discountPercent}% OFF
                   </div>
                 </div>
@@ -305,42 +263,60 @@ const ProductCard = ({ product }) => {
             </>
           )}
 
-          {/* Hover overlay with actions */}
-          <div className="absolute inset-0 bg-black/0 group-hover:bg-black/5 transition-all duration-300 flex items-center justify-center opacity-0 group-hover:opacity-100">
-            <div className="flex gap-2">
-              <Button
-                variant="ghost"
-                size="sm"
-                className="bg-white/95 hover:bg-white text-black hover:text-black rounded-none px-4 py-2 h-auto"
-                onClick={(e) => {
-                  e.preventDefault();
-                  handleQuickView(product);
-                }}
-              >
-                <Eye className="h-4 w-4 mr-2" />
-                <span className="text-xs uppercase tracking-wide">
-                  Quick View
-                </span>
-              </Button>
-              <Button
-                variant="ghost"
-                size="sm"
-                className={`bg-white/95 hover:bg-white hover:text-red-400 rounded-none px-3 py-2 h-auto ${wishlistItems[product.id] ? "text-red-500" : "text-black"
+          {/* Image indicators - clickable dots to navigate carousel */}
+          {getAllProductImages.length > 1 && (
+            <div className="absolute bottom-3 left-1/2 -translate-x-1/2 z-30 flex gap-1.5 opacity-100 transition-opacity duration-300">
+              {getAllProductImages.map((_, idx) => (
+                <button
+                  key={idx}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    setCurrentImageIndex(idx);
+                  }}
+                  className={`h-1.5 rounded-full transition-all duration-300 cursor-pointer ${
+                    idx === currentImageIndex
+                      ? "bg-primary w-6"
+                      : "bg-white/70 w-1.5 hover:bg-white/90"
                   }`}
-                onClick={(e) => handleAddToWishlist(product, e)}
-                disabled={isAddingToWishlist[product.id]}
-              >
-                <Heart
-                  className={`h-4 w-4 ${wishlistItems[product.id] ? "fill-current" : ""
-                    }`}
+                  title={`View image ${idx + 1}`}
+                  aria-label={`Go to image ${idx + 1}`}
                 />
-              </Button>
+              ))}
             </div>
+          )}
+
+          {/* Heart button - always visible at bottom right of image */}
+          <div className="absolute bottom-3 right-3 z-30 opacity-100 transition-all duration-300">
+            <Button
+              variant="ghost"
+              size="sm"
+              className={`bg-white/95 hover:bg-white hover:text-red-400 rounded-full p-2 h-auto shadow-md backdrop-blur-sm ${
+                wishlistItems[product.id] ? "text-red-500" : "text-black"
+              }`}
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                handleAddToWishlist(product, e);
+              }}
+              disabled={isAddingToWishlist[product.id]}
+              title={
+                wishlistItems[product.id]
+                  ? "Remove from wishlist"
+                  : "Add to wishlist"
+              }
+            >
+              <Heart
+                className={`h-4 w-4 ${
+                  wishlistItems[product.id] ? "fill-current" : ""
+                }`}
+              />
+            </Button>
           </div>
         </div>
       </Link>
 
-      <div className="p-4">
+      <div className="p-3">
         <Link
           href={`/products/${product.slug}`}
           className="block group-hover:text-black"
@@ -389,17 +365,17 @@ const ProductCard = ({ product }) => {
             )}
           </div>
           <Button
-            onClick={() => handleAddToCart(product)}
-            variant="outline"
+            variant="default"
             size="sm"
-            className="rounded-none border-[#136C5B] text-[#136C5B] hover:bg-[#136C5B] hover:text-white transition-all duration-300 px-4"
-            disabled={isAddingToCart[product.id]}
+            className="bg-primary hover:bg-primary/90 text-white hover:text-white rounded-full p-2.5 h-auto shadow-md border-0"
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              handleQuickView(product);
+            }}
+            title="Quick View"
           >
-            {isAddingToCart[product.id] ? (
-              <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-current"></div>
-            ) : (
-              <span className="text-xs uppercase tracking-wide">Add</span>
-            )}
+            <Eye className="h-4 w-4 md:h-5 md:w-5" />
           </Button>
         </div>
       </div>

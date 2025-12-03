@@ -14,13 +14,13 @@ export default function ProductsLayout({ children }) {
       <div className="px-2 md:px-4 py-4 md:py-8">
         <div className="flex gap-2 md:gap-8">
           {/* Left Sidebar - Vertical Categories - Only on mobile and not on product detail pages */}
-          {!isProductDetailPage && (
+          {/* {!isProductDetailPage && (
             <div className="flex-shrink-0 md:hidden block">
               <div className="sticky top-24">
                 <VerticalCategoriesCarousel />
               </div>
             </div>
-          )}
+          )} */}
 
           {/* Right Side - Main Content */}
           <div

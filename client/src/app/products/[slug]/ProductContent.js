@@ -217,12 +217,7 @@ export default function ProductContent({ slug }) {
     }
   }, [slug, sizesOrderMap, colorsOrderMap]);
 
-  // Check if a combination is available
-  const isCombinationAvailable = (colorId, sizeId) => {
-    return availableCombinations.some(
-      (combo) => combo.colorId === colorId && combo.sizeId === sizeId
-    );
-  };
+
 
   // Get available sizes for a specific color
   const getAvailableSizesForColor = (colorId) => {
@@ -428,6 +423,33 @@ export default function ProductContent({ slug }) {
     }
   };
 
+  // Handle buy now - add to cart and redirect to checkout
+  const handleBuyNow = async () => {
+    const variantToUse = selectedVariant || (product?.variants && product.variants.length > 0 ? product.variants[0] : null);
+
+    if (!variantToUse) {
+      return;
+    }
+
+    setIsAddingToCart(true);
+
+    try {
+      const result = await addVariantToCart(
+        variantToUse,
+        quantity,
+        product.name
+      );
+      if (result.success) {
+        // Redirect to checkout
+        router.push("/checkout");
+      }
+    } catch (err) {
+      console.error("Error adding to cart:", err);
+    } finally {
+      setIsAddingToCart(false);
+    }
+  };
+
   // Render product images - now supports variant images with improved fallback
   const renderImages = () => {
     let imagesToShow = [];
@@ -509,11 +531,10 @@ export default function ProductContent({ slug }) {
           {imagesToShow.map((image, index) => (
             <div
               key={index}
-              className={`relative aspect-square w-full bg-gray-100 rounded-lg overflow-hidden cursor-pointer border-2 ${
-                currentMainImage?.url === image.url
-                  ? "border-primary"
-                  : "border-transparent"
-              }`}
+              className={`relative aspect-square w-full bg-gray-100 rounded-lg overflow-hidden cursor-pointer border-2 ${currentMainImage?.url === image.url
+                ? "border-primary"
+                : "border-transparent"
+                }`}
               onClick={() => setMainImage(image)}
             >
               <Image
@@ -536,6 +557,12 @@ export default function ProductContent({ slug }) {
     return `https://desirediv-storage.blr1.cdn.digitaloceanspaces.com/${image}`;
   };
 
+  // Calculate discount percentage
+  const calculateDiscount = (regularPrice, salePrice) => {
+    if (!regularPrice || !salePrice || regularPrice <= salePrice) return 0;
+    return Math.round(((regularPrice - salePrice) / regularPrice) * 100);
+  };
+
   // Format price display
   const getPriceDisplay = () => {
     // Show loading state while initial data is being fetched
@@ -545,49 +572,91 @@ export default function ProductContent({ slug }) {
 
     // If we have a selected variant, use its price
     if (selectedVariant) {
-      if (selectedVariant.salePrice && selectedVariant.salePrice > 0) {
+      const variantPrice = selectedVariant.price || selectedVariant.salePrice || 0;
+      const variantSalePrice = selectedVariant.salePrice;
+      const variantRegularPrice = selectedVariant.price;
+
+      if (variantSalePrice && variantSalePrice > 0 && variantRegularPrice && variantRegularPrice > variantSalePrice) {
+        const discount = calculateDiscount(variantRegularPrice, variantSalePrice);
         return (
-          <div className="flex items-baseline gap-2">
-            <span className="text-3xl font-bold text-primary">
-              {formatCurrency(selectedVariant.salePrice)}
-            </span>
-            <span className="text-xl text-gray-500 line-through">
-              {formatCurrency(selectedVariant.price)}
-            </span>
+          <div className="space-y-2">
+            <div className="flex items-baseline gap-2 flex-wrap">
+              <span className="text-3xl md:text-4xl font-bold text-primary">
+                {formatCurrency(variantSalePrice)}
+              </span>
+              <span className="text-xl md:text-2xl text-gray-500 line-through">
+                {formatCurrency(variantRegularPrice)}
+              </span>
+              {discount > 0 && (
+                <span className="bg-red-500 text-white text-xs md:text-sm font-bold px-2 md:px-3 py-1 rounded">
+                  {discount}% OFF
+                </span>
+              )}
+            </div>
+            <p className="text-xs text-gray-500">Inclusive of all taxes</p>
           </div>
         );
       }
 
-      return (
-        <span className="text-3xl font-bold">
-          {formatCurrency(selectedVariant.price || 0)}
-        </span>
-      );
+      if (variantPrice > 0) {
+        return (
+          <div className="space-y-2">
+            <span className="text-3xl md:text-4xl font-bold text-primary">
+              {formatCurrency(variantPrice)}
+            </span>
+            <p className="text-xs text-gray-500">Inclusive of all taxes</p>
+          </div>
+        );
+      }
     }
 
     // Fallback to product base price if no variant is selected
     if (product) {
-      if (product.hasSale && product.basePrice > 0) {
+      const basePrice = product.basePrice || 0;
+      const regularPrice = product.regularPrice || 0;
+
+      if (product.hasSale && basePrice > 0 && regularPrice > basePrice) {
+        const discount = calculateDiscount(regularPrice, basePrice);
         return (
-          <div className="flex items-baseline gap-2">
-            <span className="text-3xl font-bold text-primary">
-              {formatCurrency(product.basePrice)}
-            </span>
-            <span className="text-xl text-gray-500 line-through">
-              {formatCurrency(product.regularPrice || 0)}
-            </span>
+          <div className="space-y-2">
+            <div className="flex items-baseline gap-2 flex-wrap">
+              <span className="text-3xl md:text-4xl font-bold text-primary">
+                {formatCurrency(basePrice)}
+              </span>
+              <span className="text-xl md:text-2xl text-gray-500 line-through">
+                {formatCurrency(regularPrice)}
+              </span>
+              {discount > 0 && (
+                <span className="bg-red-500 text-white text-xs md:text-sm font-bold px-2 md:px-3 py-1 rounded">
+                  {discount}% OFF
+                </span>
+              )}
+            </div>
+            <p className="text-xs text-gray-500">Inclusive of all taxes</p>
           </div>
         );
       }
 
-      return (
-        <span className="text-3xl font-bold">
-          {formatCurrency(product.basePrice || 0)}
-        </span>
-      );
+      if (basePrice > 0) {
+        return (
+          <div className="space-y-2">
+            <span className="text-3xl md:text-4xl font-bold text-primary">
+              {formatCurrency(basePrice)}
+            </span>
+            <p className="text-xs text-gray-500">Inclusive of all taxes</p>
+          </div>
+        );
+      }
     }
 
-    return null;
+    // Final fallback - show placeholder
+    return (
+      <div className="space-y-2">
+        <span className="text-3xl md:text-4xl font-bold text-gray-400">
+          Price not available
+        </span>
+      </div>
+    );
   };
 
   // Handle add to wishlist
@@ -638,7 +707,7 @@ export default function ProductContent({ slug }) {
   // Display loading state
   if (loading) {
     return (
-      <div className="container mx-auto px-4 py-12">
+      <div className="max-w-7xl mx-auto px-4 py-12">
         <div className="flex flex-col items-center justify-center h-64">
           <div className="w-16 h-16 border-4 border-primary border-t-transparent rounded-full animate-spin mb-6"></div>
           <p className="text-gray-600 text-lg">Loading product details...</p>
@@ -650,7 +719,7 @@ export default function ProductContent({ slug }) {
   // Display error state
   if (error) {
     return (
-      <div className="container mx-auto px-4 py-8">
+      <div className="max-w-7xl mx-auto px-4 py-8">
         <div className="bg-red-50 p-6 rounded-lg shadow-sm border border-red-200 flex flex-col items-center text-center">
           <AlertCircle className="text-red-500 h-12 w-12 mb-4" />
           <h2 className="text-2xl font-semibold text-red-700 mb-2">
@@ -670,7 +739,7 @@ export default function ProductContent({ slug }) {
   // If product not found
   if (!product) {
     return (
-      <div className="container mx-auto px-4 py-8">
+      <div className="max-w-7xl mx-auto px-4 py-8">
         <div className="bg-yellow-50 p-6 rounded-lg shadow-sm border border-yellow-200 flex flex-col items-center text-center">
           <AlertCircle className="text-yellow-500 h-12 w-12 mb-4" />
           <h2 className="text-2xl font-semibold text-yellow-700 mb-2">
@@ -691,37 +760,36 @@ export default function ProductContent({ slug }) {
 
   // Updated render code for the product image carousel
   return (
-    <div className="container mx-auto px-4 py-8">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 md:py-8">
       {/* Breadcrumbs */}
-      <div className="flex items-center text-sm mb-8">
-        <Link href="/" className="text-gray-500 hover:text-primary">
-          Home
+      <div className="flex items-center text-xs sm:text-sm mb-6 md:mb-8 flex-wrap">
+        <Link href="/" className="text-gray-500 hover:text-primary transition-colors">
+          HOME
         </Link>
-        <ChevronRight className="h-4 w-4 mx-2 text-gray-400" />
-        <Link href="/products" className="text-gray-500 hover:text-primary">
-          Products
+        <ChevronRight className="h-3 w-3 sm:h-4 sm:w-4 mx-1 sm:mx-2 text-gray-400" />
+        <Link href="/products" className="text-gray-500 hover:text-primary transition-colors">
+          PRODUCTS
         </Link>
         {(product?.category || product?.categories?.[0]?.category) && (
           <>
-            <ChevronRight className="h-4 w-4 mx-2 text-gray-400" />
+            <ChevronRight className="h-3 w-3 sm:h-4 sm:w-4 mx-1 sm:mx-2 text-gray-400" />
             <Link
-              href={`/category/${
-                product.category?.slug || product.categories[0]?.category?.slug
-              }`}
-              className="text-gray-500 hover:text-primary"
+              href={`/category/${product.category?.slug || product.categories[0]?.category?.slug
+                }`}
+              className="text-gray-500 hover:text-primary transition-colors uppercase"
             >
               {product.category?.name || product.categories[0]?.category?.name}
             </Link>
           </>
         )}
-        <ChevronRight className="h-4 w-4 mx-2 text-gray-400" />
-        <span className="text-primary">{product?.name}</span>
+        <ChevronRight className="h-3 w-3 sm:h-4 sm:w-4 mx-1 sm:mx-2 text-gray-400" />
+        <span className="text-primary font-medium truncate max-w-[200px] sm:max-w-none">{product?.name}</span>
       </div>
 
       {/* Product Info */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12">
         {/* Product Images */}
-        <div>
+        <div className="w-full">
           {loading ? (
             <div className="aspect-square w-full bg-gray-100 rounded-lg animate-pulse"></div>
           ) : error ? (
@@ -737,7 +805,7 @@ export default function ProductContent({ slug }) {
         </div>
 
         {/* Right Column - Product Details */}
-        <div className="flex flex-col">
+        <div className="flex flex-col space-y-6">
           {/* Brand name (show plain text regardless of shape) */}
           {product.brand && (
             <Link
@@ -749,7 +817,7 @@ export default function ProductContent({ slug }) {
           )}
 
           {/* Product name */}
-          <h1 className="text-2xl md:text-3xl font-bold mb-2">
+          <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold mb-3 uppercase tracking-wide">
             {product.name}
           </h1>
 
@@ -759,7 +827,7 @@ export default function ProductContent({ slug }) {
               {[...Array(5)].map((_, i) => (
                 <Star
                   key={i}
-                  className="h-4 w-4"
+                  className="h-4 w-4 md:h-5 md:w-5"
                   fill={
                     i < Math.round(product.avgRating || 0)
                       ? "currentColor"
@@ -794,33 +862,47 @@ export default function ProductContent({ slug }) {
           {/* Color Selection */}
           {product.colorOptions && product.colorOptions.length > 0 && (
             <div className="mb-6">
-              <h3 className="text-sm font-medium mb-3 uppercase">Color</h3>
-              <div className="flex flex-wrap gap-2">
+              <h3 className="text-sm font-semibold mb-3 uppercase tracking-wide">SELECT COLOR</h3>
+              <div className="flex flex-wrap gap-3 items-center">
                 {product.colorOptions.map((color) => {
                   // Check if this color has any available combinations
                   const availableSizeIds = getAvailableSizesForColor(color.id);
                   const isAvailable = availableSizeIds.length > 0;
+                  const isSelected = selectedColor?.id === color.id;
 
                   return (
                     <button
                       key={color.id}
-                      className={`px-4 py-2 rounded-md border text-sm transition-all flex items-center gap-2 ${
-                        selectedColor?.id === color.id
-                          ? "border-primary bg-primary text-white font-medium"
-                          : isAvailable
-                          ? "border-gray-300 hover:border-gray-400"
-                          : "border-gray-200 text-gray-400 cursor-not-allowed"
-                      }`}
-                      onClick={() => handleColorChange(color)}
+                      className={`flex flex-col items-center gap-2 transition-all ${!isAvailable ? "opacity-50 cursor-not-allowed" : "cursor-pointer"}`}
+                      onClick={() => isAvailable && handleColorChange(color)}
                       disabled={!isAvailable}
+                      title={color.name}
                     >
-                      {color.hexCode && (
+                      {color.hexCode ? (
                         <div
-                          className="w-4 h-4 rounded border"
+                          className={`w-12 h-12 md:w-14 md:h-14 rounded-full border-2 transition-all ${isSelected
+                              ? "border-primary ring-2 ring-primary ring-offset-2"
+                              : isAvailable
+                                ? "border-gray-300 hover:border-gray-500"
+                                : "border-gray-200"
+                            }`}
                           style={{ backgroundColor: color.hexCode }}
                         />
+                      ) : (
+                        <div
+                          className={`w-12 h-12 md:w-14 md:h-14 rounded-full border-2 transition-all flex items-center justify-center text-xs ${isSelected
+                              ? "border-primary bg-primary text-white ring-2 ring-primary ring-offset-2"
+                              : isAvailable
+                                ? "border-gray-300 hover:border-gray-500"
+                                : "border-gray-200"
+                            }`}
+                        >
+                          {color.name.charAt(0)}
+                        </div>
                       )}
-                      {color.name}
+                      <span className={`text-xs ${isSelected ? "font-semibold text-primary" : "text-gray-700"}`}>
+                        {color.name}
+                      </span>
                     </button>
                   );
                 })}
@@ -831,31 +913,37 @@ export default function ProductContent({ slug }) {
           {/* Size Selection */}
           {product.sizeOptions && product.sizeOptions.length > 0 && (
             <div className="mb-6">
-              <h3 className="text-sm font-medium mb-3 uppercase">Size</h3>
+              <div className="flex items-center justify-between mb-3">
+                <h3 className="text-sm font-semibold uppercase tracking-wide">SELECT SIZE</h3>
+                <Link href="#size-guide" className="text-xs text-gray-500 hover:text-primary flex items-center gap-1">
+                  <span>Size Guide</span>
+                </Link>
+              </div>
               <div className="flex flex-wrap gap-2">
                 {product.sizeOptions.map((size) => {
                   // Check if this size has any available combinations with the selected color
                   const availableColorIds = getAvailableColorsForSize(size.id);
                   const isAvailable = selectedColor
                     ? availableCombinations.some(
-                        (combo) =>
-                          combo.colorId === selectedColor.id &&
-                          combo.sizeId === size.id
-                      )
+                      (combo) =>
+                        combo.colorId === selectedColor.id &&
+                        combo.sizeId === size.id
+                    )
                     : availableColorIds.length > 0;
+                  const isSelected = selectedSize?.id === size.id;
 
                   return (
                     <button
                       key={size.id}
-                      className={`px-4 py-2 rounded-md border text-sm transition-all ${
-                        selectedSize?.id === size.id
-                          ? "border-primary bg-primary text-white font-medium"
+                      className={`w-12 h-12 md:w-14 md:h-14 rounded-full border-2 text-sm font-medium transition-all flex items-center justify-center ${isSelected
+                          ? "border-primary bg-primary text-white"
                           : isAvailable
-                          ? "border-gray-300 hover:border-gray-400"
-                          : "border-gray-200 text-gray-400 cursor-not-allowed"
-                      }`}
-                      onClick={() => handleSizeChange(size)}
+                            ? "border-gray-300 hover:border-gray-500 text-gray-700"
+                            : "border-gray-200 text-gray-400 cursor-not-allowed"
+                        }`}
+                      onClick={() => isAvailable && handleSizeChange(size)}
                       disabled={!isAvailable}
+                      title={size.display || size.name}
                     >
                       {size.display || size.name}
                     </button>
@@ -920,7 +1008,7 @@ export default function ProductContent({ slug }) {
           {/* Action Buttons */}
           <div className="flex flex-col sm:flex-row gap-4 mb-6">
             <Button
-              className="flex-1 flex items-center justify-center gap-2 py-4 md:py-6 text-base bg-primary hover:bg-primary/90 rounded-md"
+              className="flex-1 flex items-center justify-center gap-2 py-4 md:py-6 text-base bg-primary hover:bg-primary/90 text-white rounded-md font-semibold uppercase tracking-wide"
               size="lg"
               onClick={handleAddToCart}
               disabled={
@@ -940,18 +1028,18 @@ export default function ProductContent({ slug }) {
               ) : (
                 <>
                   <ShoppingCart className="h-5 w-5" />
-                  Add to Cart
+                  ADD TO BAG
                 </>
               )}
             </Button>
 
+
             <Button
               variant="outline"
-              className={`rounded-md py-6 ${
-                isInWishlist
-                  ? "text-red-600 border-red-600 hover:bg-red-50"
-                  : "border-gray-300 hover:border-primary hover:text-primary"
-              }`}
+              className={`rounded-md py-6 ${isInWishlist
+                ? "text-red-600 border-red-600 hover:bg-red-50"
+                : "border-gray-300 hover:border-primary hover:text-primary"
+                }`}
               size="icon"
               onClick={handleAddToWishlist}
               disabled={isAddingToWishlist}
@@ -993,31 +1081,28 @@ export default function ProductContent({ slug }) {
         <div className="border-b border-gray-200">
           <div className="flex overflow-x-auto">
             <button
-              className={`px-6 py-3 font-medium text-sm uppercase transition-colors ${
-                activeTab === "description"
-                  ? "border-b-2 border-primary text-primary"
-                  : "text-gray-500 hover:text-gray-700"
-              }`}
+              className={`px-6 py-3 font-medium text-sm uppercase transition-colors ${activeTab === "description"
+                ? "border-b-2 border-primary text-primary"
+                : "text-gray-500 hover:text-gray-700"
+                }`}
               onClick={() => setActiveTab("description")}
             >
               Description
             </button>
             <button
-              className={`px-6 py-3 font-medium text-sm uppercase transition-colors ${
-                activeTab === "reviews"
-                  ? "border-b-2 border-primary text-primary"
-                  : "text-gray-500 hover:text-gray-700"
-              }`}
+              className={`px-6 py-3 font-medium text-sm uppercase transition-colors ${activeTab === "reviews"
+                ? "border-b-2 border-primary text-primary"
+                : "text-gray-500 hover:text-gray-700"
+                }`}
               onClick={() => setActiveTab("reviews")}
             >
               Reviews ({product.reviewCount || 0})
             </button>
             <button
-              className={`px-6 py-3 font-medium text-sm uppercase transition-colors ${
-                activeTab === "shipping"
-                  ? "border-b-2 border-primary text-primary"
-                  : "text-gray-500 hover:text-gray-700"
-              }`}
+              className={`px-6 py-3 font-medium text-sm uppercase transition-colors ${activeTab === "shipping"
+                ? "border-b-2 border-primary text-primary"
+                : "text-gray-500 hover:text-gray-700"
+                }`}
               onClick={() => setActiveTab("shipping")}
             >
               Shipping & Returns

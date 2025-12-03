@@ -222,52 +222,91 @@ export const updateBanner = asyncHandler(async (req, res, next) => {
     updateData.isActive = isActive !== "false" && isActive !== false;
 
   // Handle position reordering if position is being changed
-  if (newPosition !== null && newPosition !== existingBanner.position) {
+  if (newPosition !== null) {
     const oldPosition = existingBanner.position;
 
-    if (newPosition < oldPosition) {
-      // Moving to earlier position - shift banners between new and old position down
-      const bannersToShift = await prisma.banner.findMany({
-        where: {
-          position: {
-            gte: newPosition,
-            lt: oldPosition,
-          },
-          id: {
-            not: bannerId, // Exclude current banner
-          },
-        },
-      });
-
-      for (const banner of bannersToShift) {
-        await prisma.banner.update({
-          where: { id: banner.id },
-          data: {
-            position: banner.position + 1,
+    if (newPosition !== oldPosition) {
+      // Position is being changed - need to reorder
+      if (newPosition < oldPosition) {
+        // Moving to earlier position (e.g., from 5 to 1)
+        // Shift all banners from newPosition to oldPosition-1 up by 1
+        const bannersToShift = await prisma.banner.findMany({
+          where: {
+            position: {
+              gte: newPosition,
+              lt: oldPosition,
+            },
+            id: {
+              not: bannerId, // Exclude current banner
+            },
           },
         });
+
+        for (const banner of bannersToShift) {
+          await prisma.banner.update({
+            where: { id: banner.id },
+            data: {
+              position: banner.position + 1,
+            },
+          });
+        }
+      } else {
+        // Moving to later position (e.g., from 1 to 5)
+        // Shift all banners from oldPosition+1 to newPosition down by 1
+        const bannersToShift = await prisma.banner.findMany({
+          where: {
+            position: {
+              gt: oldPosition,
+              lte: newPosition,
+            },
+            id: {
+              not: bannerId, // Exclude current banner
+            },
+          },
+        });
+
+        for (const banner of bannersToShift) {
+          await prisma.banner.update({
+            where: { id: banner.id },
+            data: {
+              position: banner.position - 1,
+            },
+          });
+        }
       }
     } else {
-      // Moving to later position - shift banners between old and new position up
-      const bannersToShift = await prisma.banner.findMany({
+      // Position is same, but check if someone else has this position
+      // If yes, shift them and all after them
+      const conflictingBanner = await prisma.banner.findFirst({
         where: {
-          position: {
-            gt: oldPosition,
-            lte: newPosition,
-          },
+          position: newPosition,
           id: {
             not: bannerId, // Exclude current banner
           },
         },
       });
 
-      for (const banner of bannersToShift) {
-        await prisma.banner.update({
-          where: { id: banner.id },
-          data: {
-            position: banner.position - 1,
+      if (conflictingBanner) {
+        // Shift all banners at or after this position (except current) up by 1
+        const bannersToShift = await prisma.banner.findMany({
+          where: {
+            position: {
+              gte: newPosition,
+            },
+            id: {
+              not: bannerId, // Exclude current banner
+            },
           },
         });
+
+        for (const banner of bannersToShift) {
+          await prisma.banner.update({
+            where: { id: banner.id },
+            data: {
+              position: banner.position + 1,
+            },
+          });
+        }
       }
     }
   }

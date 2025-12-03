@@ -61,9 +61,9 @@ export function Footer() {
       {/* Main Footer - Modern minimal style */}
       <div className="bg-black py-16">
         <div className="container mx-auto px-4">
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-12">
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 md:gap-12">
             {/* Column 1 - About */}
-            <div className="lg:col-span-1">
+            <div className="col-span-2 lg:col-span-1">
               <div className="mb-6">
                 <Link href="/" className="flex items-center">
                   <Image
@@ -178,7 +178,7 @@ export function Footer() {
       </div>
 
       {/* Copyright */}
-      <div className="bg-black border-t border-white/10 py-6">
+      <div className="bg-black border-t border-white/10 pb-20 md:pb-6 py-3">
         <div className="container mx-auto px-4">
           <p className="text-white/60 text-center text-sm">
             © {new Date().getFullYear()} All rights reserved.

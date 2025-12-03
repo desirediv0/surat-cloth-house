@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/lib/auth-context";
 import { useCart } from "@/lib/cart-context";
@@ -68,7 +68,7 @@ export default function CheckoutPage() {
   }, [isAuthenticated, cart, router, orderCreated]);
 
   // Fetch addresses
-  const fetchAddresses = async () => {
+  const fetchAddresses = useCallback(async () => {
     if (!isAuthenticated) return;
 
     setLoadingAddresses(true);
@@ -98,11 +98,11 @@ export default function CheckoutPage() {
     } finally {
       setLoadingAddresses(false);
     }
-  };
+  }, [isAuthenticated]);
 
   useEffect(() => {
     fetchAddresses();
-  }, [isAuthenticated]);
+  }, [fetchAddresses]);
 
   // Fetch Razorpay key
   useEffect(() => {
@@ -280,7 +280,8 @@ export default function CheckoutPage() {
           amount: razorpayOrder.amount,
           currency: razorpayOrder.currency,
           name: "Surat Cloth House - Premium Women's Fashion",
-          description: "Elegant women's clothing - Kurtis, Suits, Sarees & more.",
+          description:
+            "Elegant women's clothing - Kurtis, Suits, Sarees & more.",
           order_id: razorpayOrder.id,
           prefill: {
             name: user?.name || "",
@@ -828,9 +829,7 @@ export default function CheckoutPage() {
 
             <Button
               className={`w-full mt-6 bg-[#166454] hover:bg-[#0d4a3d] text-white transition-all duration-200 ${
-                processing
-                  ? "shadow-lg"
-                  : "hover:shadow-lg"
+                processing ? "shadow-lg" : "hover:shadow-lg"
               }`}
               size="lg"
               onClick={handleCheckout}

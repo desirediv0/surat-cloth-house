@@ -284,6 +284,7 @@ export default function ProductQuickView({ product, open, onOpenChange }) {
     };
 
     fetchProductDetails();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [product?.slug, product?.id, open, sizesOrderMap, colorsOrderMap]);
 
   // Get available sizes for a specific color

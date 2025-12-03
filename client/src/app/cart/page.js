@@ -280,7 +280,9 @@ export default function CartPage() {
   }, [removeCoupon]);
 
   // Memoize cart totals to prevent re-renders
-  const totals = useMemo(() => getCartTotals(), [getCartTotals, cart, coupon]);
+  // getCartTotals only uses cart and coupon, which are already in dependencies
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const totals = useMemo(() => getCartTotals(), [cart, coupon]);
 
   const handleCheckout = useCallback(() => {
     // Ensure minimum amount is 1

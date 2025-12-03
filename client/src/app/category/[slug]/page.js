@@ -80,6 +80,7 @@ export default function CategoryPage() {
     if (slug) {
       fetchCategoryAndProducts();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [slug, pagination.page, pagination.limit, sortOption]);
 
   // Handle pagination

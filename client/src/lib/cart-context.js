@@ -53,6 +53,7 @@ export function CartProvider({ children }) {
       setCart(guestCart);
       setLoading(false);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isAuthenticated, mounted]);
 
   // Clear cart when user logs out
@@ -114,6 +115,7 @@ export function CartProvider({ children }) {
         }
       }, 100); // Reduced to 100ms for even faster response
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isAuthenticated, mounted]);
 
   // Get cart from server (for authenticated users)

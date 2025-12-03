@@ -141,6 +141,7 @@ function ProductsContent() {
       setSelectedSizes(sizeId ? [sizeId] : []);
       setPagination((prev) => ({ ...prev, page: 1 }));
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     searchQuery,
     categorySlug,

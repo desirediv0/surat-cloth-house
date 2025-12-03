@@ -75,7 +75,7 @@ export const registerUser = asyncHandler(async (req, res, next) => {
   try {
     await sendEmail({
       email,
-      subject: "Your OTP for Email Verification - GenuineNutrition",
+      subject: "Your OTP for Email Verification - suratclothhouse",
       html: getEmailOtpTemplate(otpCode, 10),
     });
 
@@ -343,7 +343,7 @@ export const forgotPassword = asyncHandler(async (req, res, next) => {
   try {
     await sendEmail({
       email,
-      subject: "Reset Your Password - GenuineNutrition",
+      subject: "Reset Your Password - suratclothhouse",
       html: getResetTemplate(resetLink),
     });
 
@@ -857,9 +857,9 @@ export const getUserWishlist = asyncHandler(async (req, res, next) => {
       const avgRating =
         product.reviews.length > 0
           ? (
-              product.reviews.reduce((sum, review) => sum + review.rating, 0) /
-              product.reviews.length
-            ).toFixed(1)
+            product.reviews.reduce((sum, review) => sum + review.rating, 0) /
+            product.reviews.length
+          ).toFixed(1)
           : 0;
 
       // Get price from first available variant
@@ -892,26 +892,26 @@ export const getUserWishlist = asyncHandler(async (req, res, next) => {
           salePrice: variant.salePrice,
           color: variant.color
             ? {
-                id: variant.color.id,
-                name: variant.color.name,
-                hexCode: variant.color.hexCode,
-                image: variant.color.image
-                  ? getFileUrl(variant.color.image)
-                  : null,
-              }
+              id: variant.color.id,
+              name: variant.color.name,
+              hexCode: variant.color.hexCode,
+              image: variant.color.image
+                ? getFileUrl(variant.color.image)
+                : null,
+            }
             : null,
           size: variant.size
             ? {
-                id: variant.size.id,
-                name: variant.size.name,
-                description: variant.size.description,
-              }
+              id: variant.size.id,
+              name: variant.size.name,
+              description: variant.size.description,
+            }
             : null,
           images: variant.images
             ? variant.images.map((img) => ({
-                ...img,
-                url: getFileUrl(img.url),
-              }))
+              ...img,
+              url: getFileUrl(img.url),
+            }))
             : [],
         })),
         createdAt: item.createdAt,
@@ -1096,7 +1096,7 @@ export const requestAccountDeletion = asyncHandler(async (req, res, next) => {
   try {
     await sendEmail({
       email: user.email,
-      subject: "Confirm Account Deletion - GenuineNutrition",
+      subject: "Confirm Account Deletion - suratclothhouse",
       html: getDeleteTemplate(deletionLink),
     });
 
@@ -1378,7 +1378,7 @@ export const resendVerificationEmail = asyncHandler(async (req, res, next) => {
   try {
     await sendEmail({
       email,
-      subject: "Your OTP for Email Verification - GenuineNutrition",
+      subject: "Your OTP for Email Verification - suratclothhouse",
       html: getEmailOtpTemplate(otpCode, 10),
     });
 

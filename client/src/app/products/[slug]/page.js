@@ -10,7 +10,7 @@ const getImageUrl = (image) => {
 
 export async function generateMetadata({ params }) {
   const { slug } = params;
-  let title = "Product Details | GenuineNutrition";
+  let title = "Product Details | suratclothhouse";
   let description =
     "Premium quality fitness supplements with lab-tested ingredients for maximum effectiveness. Shop for ₹999+ and receive a scratch card with exciting rewards!.";
   let image = null;
@@ -21,7 +21,7 @@ export async function generateMetadata({ params }) {
     const product = response.data.product;
 
     if (product) {
-      title = product.metaTitle || `${product.name} | GenuineNutrition`;
+      title = product.metaTitle || `${product.name} | suratclothhouse`;
       description =
         product.metaDescription || product.description || description;
 

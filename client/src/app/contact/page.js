@@ -199,7 +199,7 @@ export default function ContactPage() {
                     <div>
                       <p className="font-medium">Email</p>
                       <p className="text-gray-600">
-                        {"connect.genuinenutrition@gmail.com"}
+                        {"connect.suratclothhouse@gmail.com"}
                       </p>
                     </div>
                   </div>
@@ -210,7 +210,7 @@ export default function ContactPage() {
                 <h3 className="text-xl font-bold mb-4">Follow Us</h3>
                 <div className="flex space-x-4">
                   <a
-                    href={"https://facebook.com/GenuineNutrition"}
+                    href={"https://facebook.com/suratclothhouse"}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="bg-white p-3 rounded-full text-primary hover:bg-primary hover:text-white transition-colors"
@@ -219,7 +219,7 @@ export default function ContactPage() {
                     <Facebook className="h-5 w-5" />
                   </a>
                   <a
-                    href={"https://instagram.com/GenuineNutrition"}
+                    href={"https://instagram.com/suratclothhouse"}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="bg-white p-3 rounded-full text-primary hover:bg-primary hover:text-white transition-colors"
@@ -228,7 +228,7 @@ export default function ContactPage() {
                     <Instagram className="h-5 w-5" />
                   </a>
                   <a
-                    href={"https://twitter.com/GenuineNutrition"}
+                    href={"https://twitter.com/suratclothhouse"}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="bg-white p-3 rounded-full text-primary hover:bg-primary hover:text-white transition-colors"

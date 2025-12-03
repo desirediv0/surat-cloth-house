@@ -85,7 +85,7 @@ export function Footer() {
                 {[
                   {
                     icon: <Instagram size={18} />,
-                    href: "https://www.instagram.com/genuinenutrition.official",
+                    href: "https://www.instagram.com/suratclothhouse.official",
                   },
                 ].map((social, idx) => (
                   <Link
@@ -169,7 +169,7 @@ export function Footer() {
 
                 <div className="flex items-center">
                   <Mail size={18} className="text-white mr-3 flex-shrink-0" />
-                  <span>connect.genuinenutrition@gmail.com</span>
+                  <span>connect.suratclothhouse@gmail.com</span>
                 </div>
               </div>
             </div>

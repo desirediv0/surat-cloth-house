@@ -126,7 +126,7 @@ export default function PrivacyPolicy() {
               If you have previously agreed to us using your personal
               information for direct marketing purposes, you may change your
               mind at any time by writing to or emailing us at
-              connect.genuinenutrition@gmail.com
+              connect.suratclothhouse@gmail.com
             </li>
           </ul>
 
@@ -142,7 +142,7 @@ export default function PrivacyPolicy() {
             If you believe that any information we are holding on you is
             incorrect or incomplete, please write to plot no 928 khat no 516,
             badhsa, Indospace Industrial & Logistics Park Badli, Jhajjar,
-            Haryana, 124105 Sondhi BO HARYANA 124105 or contact us at connect.genuinenutrition@gmail.com as soon as possible. We will
+            Haryana, 124105 Sondhi BO HARYANA 124105 or contact us at connect.suratclothhouse@gmail.com as soon as possible. We will
             promptly correct any information found to be incorrect.
           </p>
         </CardContent>

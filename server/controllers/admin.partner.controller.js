@@ -29,7 +29,7 @@ export const approvePartnerRequest = asyncHandler(async (req, res) => {
     }
 
     // Set demo password automatically (stronger)
-    const demoPassword = 'GenuineNutrition@2025';
+    const demoPassword = 'suratclothhouse@2025';
     const hashed = await bcrypt.hash(demoPassword, 10);
 
     const partner = await prisma.partner.create({

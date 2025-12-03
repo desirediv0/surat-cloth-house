@@ -4,7 +4,7 @@ export const getVerificationTemplate = (verificationLink) => `
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Verify Your Email - GenuineNutrition</title>
+    <title>Verify Your Email - suratclothhouse</title>
     <style>
         body {
             font-family: 'Arial', sans-serif;
@@ -94,17 +94,17 @@ export const getVerificationTemplate = (verificationLink) => `
 <body>
     <div class="container">
         <div class="header">
-            <h1>Welcome to GenuineNutrition</h1>
+            <h1>Welcome to suratclothhouse</h1>
         </div>
         <div class="content">
             <h2>Verify Your Email</h2>
             <p>Dear Valued Customer,</p>
-            <p>Welcome to GenuineNutrition - your trusted source for premium quality supplements. Please verify your email address to access your account:</p>
+            <p>Welcome to suratclothhouse - your trusted source for premium quality supplements. Please verify your email address to access your account:</p>
             <div class="button-container">
                 <a href="${verificationLink}" class="button">Verify Email Now</a>
             </div>
             <p>If you can't click the button, copy and paste this link in your browser: <br>${verificationLink}</p>
-            <p>If you didn't create an account with GenuineNutrition, please disregard this email.</p>
+            <p>If you didn't create an account with suratclothhouse, please disregard this email.</p>
             
             <div class="features">
                 <h3>What you can do after verification:</h3>
@@ -115,7 +115,7 @@ export const getVerificationTemplate = (verificationLink) => `
             </div>
         </div>
         <div class="footer">
-            © ${new Date().getFullYear()} GenuineNutrition | Premium Health Supplements<br>
+            © ${new Date().getFullYear()} suratclothhouse | Premium Health Supplements<br>
             This is an automated message. Please do not reply to this email.
         </div>
     </div>
@@ -129,7 +129,7 @@ export const getEmailOtpTemplate = (otp, expiresInMinutes = 10) => `
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Your One-Time Password (OTP) - GenuineNutrition</title>
+    <title>Your One-Time Password (OTP) - suratclothhouse</title>
     <style>
         body { font-family: 'Arial', sans-serif; background: #f5f5f5; margin:0; padding:0; color:#1a1a1a; }
         .container { max-width: 600px; margin: 24px auto; background: #ffffff; border-radius: 12px; overflow: hidden; box-shadow: 0 10px 20px rgba(0,0,0,0.08); }
@@ -149,14 +149,14 @@ export const getEmailOtpTemplate = (otp, expiresInMinutes = 10) => `
             </div>
             <div class="content">
                 <p>Dear Valued Customer,</p>
-                <p>Use the following One-Time Password (OTP) to verify your email for GenuineNutrition:</p>
+                <p>Use the following One-Time Password (OTP) to verify your email for suratclothhouse:</p>
                 <p style="text-align:center; margin: 24px 0;">
                     <span class="otp">${otp}</span>
                 </p>
                 <p class="note">This OTP will expire in ${expiresInMinutes} minutes. If you did not request this, please ignore this email.</p>
             </div>
             <div class="footer">
-                © ${new Date().getFullYear()} GenuineNutrition | Premium Health Supplements<br/>
+                © ${new Date().getFullYear()} suratclothhouse | Premium Health Supplements<br/>
                 This is an automated message. Please do not reply.
             </div>
         </div>
@@ -310,7 +310,7 @@ export const getResetTemplate = (resetLink) => `
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Reset Your Password - GenuineNutrition</title>
+    <title>Reset Your Password - suratclothhouse</title>
     <style>
         body {
             font-family: 'Arial', sans-serif;
@@ -387,13 +387,13 @@ export const getResetTemplate = (resetLink) => `
         <div class="content">
             <h2>Password Reset Request</h2>
             <p>Dear Valued Customer,</p>
-            <p>We received a request to reset the password for your GenuineNutrition account. Click the button below to create a new password:</p>
+            <p>We received a request to reset the password for your suratclothhouse account. Click the button below to create a new password:</p>
             <a href="${resetLink}" class="button">Reset Password</a>
-            <p>If you didn't request this password reset, please contact our support team immediately at support@genuinenutrition</p>
+            <p>If you didn't request this password reset, please contact our support team immediately at support@suratclothhouse</p>
             <p>This link will expire in 15 minutes for security reasons.</p>
         </div>
         <div class="footer">
-            © ${new Date().getFullYear()} GenuineNutrition | Premium Health Supplements<br>
+            © ${new Date().getFullYear()} suratclothhouse | Premium Health Supplements<br>
             This is an automated message. Please do not reply to this email.
         </div>
     </div>
@@ -1150,7 +1150,7 @@ export const getOrderConfirmationTemplate = (data) => `
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Order Confirmation - GenuineNutrition</title>
+    <title>Order Confirmation - suratclothhouse</title>
     <style>
         body {
             font-family: 'Arial', sans-serif;
@@ -1335,8 +1335,8 @@ export const getOrderConfirmationTemplate = (data) => `
     }/account/orders</p>
         </div>
         <div class="footer">
-            © ${new Date().getFullYear()} GenuineNutrition | Premium Health Supplements<br>
-            Questions? Contact our customer support at support@genuinenutrition
+            © ${new Date().getFullYear()} suratclothhouse | Premium Health Supplements<br>
+            Questions? Contact our customer support at support@suratclothhouse
         </div>
     </div>
 </body>
@@ -1349,7 +1349,7 @@ export const getPartnerResetTemplate = (resetLink) => `
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Reset Your Partner Password - GenuineNutrition</title>
+    <title>Reset Your Partner Password - suratclothhouse</title>
     <style>
         body {
             font-family: 'Arial', sans-serif;
@@ -1434,7 +1434,7 @@ export const getPartnerResetTemplate = (resetLink) => `
         <div class="content">
             <h2>Password Reset Request</h2>
             <p>Dear Partner,</p>
-            <p>We received a request to reset the password for your GenuineNutrition Partner account. Click the button below to create a new password:</p>
+            <p>We received a request to reset the password for your suratclothhouse Partner account. Click the button below to create a new password:</p>
             
             <div style="text-align: center; margin: 30px 0;">
                 <a href="${resetLink}" class="button">Reset Partner Password</a>
@@ -1449,7 +1449,7 @@ export const getPartnerResetTemplate = (resetLink) => `
             <p>If you didn't request this password reset, please ignore this email or contact our partner support team.</p>
         </div>
         <div class="footer">
-            © ${new Date().getFullYear()} GenuineNutrition | Partner Portal<br>
+            © ${new Date().getFullYear()} suratclothhouse | Partner Portal<br>
             This is an automated message. Please do not reply to this email.
         </div>
     </div>

@@ -116,7 +116,7 @@ export default function ApprovedPartnersTab() {
                 <h3 className="font-semibold text-blue-800 mb-2">Partner Demo Password</h3>
                 <div className="flex items-center gap-4">
                     <div className="font-mono text-lg bg-white px-3 py-2 rounded border border-blue-300">
-                        GenuineNutrition@2025
+                        suratclothhouse@2025
                     </div>
                     <p className="text-sm text-blue-700">
                         All approved partners can login with this demo password. They will be prompted to change it after first login.

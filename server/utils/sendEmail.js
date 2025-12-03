@@ -7,7 +7,7 @@ const sendEmail = async (options) => {
 
     const hasSmtpCreds = Boolean(
       process.env.SMTP_USER &&
-        (process.env.SMTP_SERVICE || process.env.SMTP_HOST)
+      (process.env.SMTP_SERVICE || process.env.SMTP_HOST)
     );
 
     if (!hasSmtpCreds && process.env.NODE_ENV !== "production") {
@@ -33,21 +33,21 @@ const sendEmail = async (options) => {
 
       const transportConfig = process.env.SMTP_SERVICE
         ? {
-            service: process.env.SMTP_SERVICE,
-            auth: {
-              user: process.env.SMTP_USER,
-              pass: process.env.SMTP_PASSWORD,
-            },
-          }
+          service: process.env.SMTP_SERVICE,
+          auth: {
+            user: process.env.SMTP_USER,
+            pass: process.env.SMTP_PASSWORD,
+          },
+        }
         : {
-            host: process.env.SMTP_HOST,
-            port,
-            secure,
-            auth: {
-              user: process.env.SMTP_USER,
-              pass: process.env.SMTP_PASSWORD,
-            },
-          };
+          host: process.env.SMTP_HOST,
+          port,
+          secure,
+          auth: {
+            user: process.env.SMTP_USER,
+            pass: process.env.SMTP_PASSWORD,
+          },
+        };
 
       transporter = nodemailer.createTransport(transportConfig);
 
@@ -64,11 +64,9 @@ const sendEmail = async (options) => {
       }
     }
 
-    const fromAddress = `${
-      process.env.EMAIL_FROM_NAME || "GenuineNutrition"
-    } <${
-      process.env.FROM_EMAIL || process.env.SMTP_USER || "no-reply@example.com"
-    }>`;
+    const fromAddress = `${process.env.EMAIL_FROM_NAME || "suratclothhouse"
+      } <${process.env.FROM_EMAIL || process.env.SMTP_USER || "no-reply@example.com"
+      }>`;
 
     const mailOptions = {
       from: fromAddress,

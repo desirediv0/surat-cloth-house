@@ -111,7 +111,7 @@ export default function RegisterPage() {
               Create Account
             </h1>
             <p className="mt-2 text-gray-600">
-              Join GenuineNutrition and start your fitness journey
+              Join suratclothhouse and start your fitness journey
             </p>
           </div>
 

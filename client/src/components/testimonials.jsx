@@ -11,7 +11,7 @@ export default function TestimonialsSection() {
       role: "Fitness Enthusiast",
       avatar: "RS",
       quote:
-        "I've tried many supplements, but GenuineNutrition products have truly made a difference in my training and recovery.",
+        "I've tried many supplements, but suratclothhouse products have truly made a difference in my training and recovery.",
       rating: 5,
     },
     {
@@ -136,11 +136,10 @@ export default function TestimonialsSection() {
                     <Star
                       key={i}
                       size={18}
-                      className={`${
-                        i < testimonial.rating
+                      className={`${i < testimonial.rating
                           ? "fill-[#F47C20]"
                           : "text-gray-300"
-                      }`}
+                        }`}
                     />
                   ))}
                 </div>

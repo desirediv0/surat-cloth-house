@@ -83,7 +83,7 @@ export default function NonApprovedPartnersTab() {
             closeApproveDialog();
 
             // Show demo password to admin
-            const demoPassword = response.data.data.demoPassword || 'genuinenutrition';
+            const demoPassword = response.data.data.demoPassword || 'suratclothhouse';
             alert(`Partner approved successfully!\nDemo Password: ${demoPassword}\nPlease share this password with the partner.`);
         } catch (err) {
             if (axios.isAxiosError(err)) {
@@ -279,7 +279,7 @@ export default function NonApprovedPartnersTab() {
                     <DialogHeader>
                         <DialogTitle>Approve Partner</DialogTitle>
                         <DialogDescription>
-                            This partner will be approved with the demo password "genuinenutrition".
+                            This partner will be approved with the demo password "suratclothhouse".
                             Please share this password with the partner after approval.
                         </DialogDescription>
                     </DialogHeader>
@@ -294,7 +294,7 @@ export default function NonApprovedPartnersTab() {
                     <div className="bg-accent p-4 rounded-lg">
                         <p className="font-semibold text-sm mb-2">Demo Password:</p>
                         <p className="font-mono text-lg bg-background px-3 py-2 rounded border">
-                            genuinenutrition
+                            suratclothhouse
                         </p>
                         <p className="text-xs text-muted-foreground mt-2">
                             The partner can login with this password and will be prompted to change it.

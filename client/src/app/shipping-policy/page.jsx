@@ -22,7 +22,7 @@ export default function ShippingPolicy() {
             services will be confirmed on your mail ID as specified during
             registration. For any issues in utilizing our services you may
             contact our helpdesk on
-            connect.genuinenutrition@gmail.com
+            connect.suratclothhouse@gmail.com
           </p>
           <p className="text-sm">Last updated on Jul 14 2025</p>
         </CardContent>
